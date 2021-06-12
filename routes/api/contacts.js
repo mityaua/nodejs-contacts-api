@@ -3,6 +3,12 @@ const router = express.Router()
 
 const { listContacts, getContactById, addContact, removeContact, updateContact } = require('../../model')
 
+// Импорт валидации из отдельной папки
+const {
+  addContactValidation,
+  patchContactValidation
+} = require('../../middlewares/validationMiddleware')
+
 // Роут для списка всех контактов
 router.get('/', async (req, res, next) => {
   try {
@@ -16,10 +22,8 @@ router.get('/', async (req, res, next) => {
 
 // Роут для контакта по id
 router.get('/:contactId', async (req, res, next) => {
-  const { contactId: id } = req.params
-
   try {
-    const contact = await getContactById(id)
+    const contact = await getContactById(req.params.contactId)
 
     if (!contact) {
       return res.status(404).json({ message: 'Not found' })
@@ -32,7 +36,7 @@ router.get('/:contactId', async (req, res, next) => {
 })
 
 // Роут для создания контакта
-router.post('/', async (req, res, next) => {
+router.post('/', addContactValidation, async (req, res, next) => {
   try {
     const contact = await addContact(req.body)
 
@@ -44,10 +48,8 @@ router.post('/', async (req, res, next) => {
 
 // Роут для удаления контакта
 router.delete('/:contactId', async (req, res, next) => {
-  const { contactId: id } = req.params
-
   try {
-    const result = await removeContact(id)
+    const result = await removeContact(req.params.contactId)
 
     if (!result) {
       return res.status(404).json({ message: 'Not found' })
@@ -60,7 +62,7 @@ router.delete('/:contactId', async (req, res, next) => {
 })
 
 // Роут для обновления контакта
-router.put('/:contactId', async (req, res, next) => {
+router.patch('/:contactId', patchContactValidation, async (req, res, next) => {
   try {
     const contact = await updateContact(req.params.contactId, req.body)
 

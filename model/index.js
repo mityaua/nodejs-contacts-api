@@ -4,14 +4,19 @@ const path = require('path')
 const { customAlphabet } = require('nanoid')
 const newId = customAlphabet('1234567890', 10)
 
-const contactsFile = path.join(__dirname, 'contacts.json')
+const contactsFile = path.join(__dirname, 'contacts.json') // Путь к файлу с контактами
 
-// Читает файл со всеми контактами
+// Читает файл со всеми контактами и возвращает результата парса
+const readContactsFile = async (contacts) => {
+  const data = await fs.readFile(contacts, 'utf8')
+
+  return JSON.parse(data)
+}
+
+// Получает все контакты
 const listContacts = async () => {
   try {
-    const data = await fs.readFile(contactsFile, 'utf8')
-
-    return JSON.parse(data)
+    return await readContactsFile(contactsFile)
   } catch (error) {
     console.error(error.message)
   }
@@ -20,15 +25,15 @@ const listContacts = async () => {
 // Находит в файле контакт по id
 const getContactById = async (contactId) => {
   try {
-    const data = await fs.readFile(contactsFile, 'utf8')
-    const parsedContacts = JSON.parse(data)
+    const contacts = await readContactsFile(contactsFile)
 
-    if (parsedContacts.some(contact => contact.id === Number(contactId))) {
-      const contact = parsedContacts.find(
+    // Если в контактах есть такой id, тогда ищет нужный контакт в массиве
+    if (contacts.some(contact => contact.id === Number(contactId))) {
+      const contactById = contacts.find(
         contact => contact.id === Number(contactId)
       )
 
-      return contact
+      return contactById
     }
   } catch (error) {
     console.error(error.message)
@@ -37,8 +42,9 @@ const getContactById = async (contactId) => {
 
 // Создает в файле новый контакт
 const addContact = async (body) => {
-  const { name, email, phone } = body // ДОБАВИТЬ ВАЛИДАЦИЮ!!!
+  const { name, email, phone } = body
 
+  // Формирует новый контакт с уникальным id
   const newContact = {
     id: Number(newId()),
     name,
@@ -47,10 +53,9 @@ const addContact = async (body) => {
   }
 
   try {
-    const data = await fs.readFile(contactsFile, 'utf8')
-    const parsedContacts = JSON.parse(data)
+    const contacts = await readContactsFile(contactsFile)
 
-    const newContacts = [...parsedContacts, newContact]
+    const newContacts = [...contacts, newContact]
 
     await fs.writeFile(contactsFile, JSON.stringify(newContacts, null, 2))
 
@@ -63,44 +68,42 @@ const addContact = async (body) => {
 // Удаляет контакт из файла
 const removeContact = async (contactId) => {
   try {
-    const data = await fs.readFile(contactsFile, 'utf8')
-    const parsedContacts = JSON.parse(data)
+    const contacts = await readContactsFile(contactsFile)
 
     // Ищет в массиве хотя бы одно совпадение по id. Если есть, тогда фильтрует массив
-    if (parsedContacts.some(contact => contact.id === Number(contactId))) {
-      const filteredContacts = parsedContacts.filter(
+    if (contacts.some(contact => contact.id === Number(contactId))) {
+      const newContacts = contacts.filter(
         contact => contact.id !== Number(contactId)
       )
 
-      await fs.writeFile(contactsFile, JSON.stringify(filteredContacts, null, 2))
+      await fs.writeFile(contactsFile, JSON.stringify(newContacts, null, 2))
 
-      return filteredContacts
+      return newContacts
     }
   } catch (error) {
     console.error(error.message)
   }
 }
 
-// Обновляет контакт - ДОБАВИТЬ ВАЛИДАЦИЮ!!!
+// Обновляет контакт
 const updateContact = async (contactId, body) => {
   try {
-    const data = await fs.readFile(contactsFile, 'utf8')
-    const parsedContacts = JSON.parse(data)
+    const contacts = await readContactsFile(contactsFile)
 
     // Находит нужный контакт по id
-    const neededСontact = parsedContacts.find(
+    const neededСontact = contacts.find(
       contact => contact.id === Number(contactId)
     )
 
-    // Если контакт есть, тогда обновляем его
+    // Если контакт есть, тогда формируем новый
     if (neededСontact) {
       const updatedСontact = {
         ...neededСontact,
         ...body
       }
 
-      // Проходимся по массиву контактов, если id совпадает, тогда возвращаем обновленный контакт (или старый)
-      const result = parsedContacts.map(contact => {
+      // Проходимся по массиву контактов, если id совпадает, тогда возвращаем обновленный контакт (или же старый)
+      const result = contacts.map(contact => {
         if (contact.id === Number(contactId)) {
           return updatedСontact
         } else return contact
