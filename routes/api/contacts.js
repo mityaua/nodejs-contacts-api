@@ -1,24 +1,23 @@
 const express = require('express')
 const router = express.Router()
 
-router.get('/', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+const {
+  getContacts,
+  getContactsById,
+  addContacts,
+  deleteContact,
+  patchContact,
+} = require('../../controllers/contactsController') // Импорт контроллеров маршрутов
 
-router.get('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+const {
+  addContactValidation,
+  patchContactValidation
+} = require('../../middlewares/validation') // Импорт валидации
 
-router.post('/', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
-
-router.delete('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
-
-router.patch('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+router.get('/', getContacts) // Роут для списка всех контактов
+router.get('/:contactId', getContactsById) // Роут для контакта по id
+router.post('/', addContactValidation, addContacts) // Роут для создания контакта
+router.patch('/:contactId', patchContactValidation, patchContact) // Роут для обновления контакта
+router.delete('/:contactId', deleteContact) // Роут для удаления контакта
 
 module.exports = router
