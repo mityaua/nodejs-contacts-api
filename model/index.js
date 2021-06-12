@@ -13,7 +13,7 @@ const readContactsFile = async (contacts) => {
   return JSON.parse(data)
 }
 
-// Получает все контакты
+// Получает все контакты из файла
 const listContacts = async () => {
   try {
     return await readContactsFile(contactsFile)
@@ -85,7 +85,7 @@ const removeContact = async (contactId) => {
   }
 }
 
-// Обновляет контакт
+// Обновляет контакт в файле
 const updateContact = async (contactId, body) => {
   try {
     const contacts = await readContactsFile(contactsFile)
