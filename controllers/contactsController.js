@@ -1,12 +1,12 @@
 // Контроллеры - логика обработки маршрутов
 
 // Импорт функций для работы с локальной БД (json файлом)
-const { listContacts, getContactById, addContact, removeContact, updateContact } = require('../model')
+const { getAllContacts, getContactById, addContact, removeContact, updateContact } = require('../model')
 
 // Получение всех контактов
 const getContacts = async (req, res, next) => {
   try {
-    const contacts = await listContacts()
+    const contacts = await getAllContacts()
 
     res.status(200).json({ contacts, status: 'success' })
   } catch (error) {
