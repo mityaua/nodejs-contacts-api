@@ -1,4 +1,4 @@
-const Contacts = require('./contacts')
+const Contacts = require('../schemas/contacts')
 
 // Получает все контакты
 const getAllContacts = async () => {
@@ -9,7 +9,7 @@ const getAllContacts = async () => {
   }
 }
 
-// Находит контак по id
+// Находит контакт по id
 const getContactById = async (contactId) => {
   try {
     return Contacts.findById(contactId)
@@ -47,10 +47,20 @@ const updateContact = async (contactId, body) => {
   }
 }
 
+// Обновляет статус контакт (В РАБОТЕ!!!)
+// const updateContactStatus = async (contactId, body) => {
+//   try {
+//     return Contacts.findByIdAndUpdate(contactId, body, { new: true })
+//   } catch (error) {
+//     console.error(error.message)
+//   }
+// }
+
 module.exports = {
   getAllContacts,
   getContactById,
   addContact,
   removeContact,
   updateContact,
+  // updateContactStatus
 }

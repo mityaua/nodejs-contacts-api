@@ -7,17 +7,21 @@ const {
   addContacts,
   deleteContact,
   patchContact,
-} = require('../../controllers/contactsController') // Импорт контроллеров маршрутов
+  patchContactStatus
+} = require('../../controllers/contactsController') // Контроллеры маршрутов
 
 const {
   addContactValidation,
   patchContactValidation
-} = require('../../middlewares/validation') // Импорт валидации
+} = require('../../middlewares/validation') // Валидации Joi
 
-router.get('/', getContacts) // Роут для списка всех контактов
-router.get('/:contactId', getContactsById) // Роут для контакта по id
-router.post('/', addContactValidation, addContacts) // Роут для создания контакта
-router.patch('/:contactId', patchContactValidation, patchContact) // Роут для обновления контакта
-router.delete('/:contactId', deleteContact) // Роут для удаления контакта
+const { asyncWrapper } = require('../../helpers/asyncWrapper') // Мидлвар универсального обработчика try catch
+
+router.get('/', asyncWrapper(getContacts)) // Роут для списка всех контактов
+router.get('/:contactId', asyncWrapper(getContactsById)) // Роут для контакта по id
+router.post('/', addContactValidation, asyncWrapper(addContacts)) // Роут для создания контакта
+router.patch('/:contactId', patchContactValidation, asyncWrapper(patchContact)) // Роут для обновления контакта
+router.delete('/:contactId', asyncWrapper(deleteContact)) // Роут для удаления контакта
+router.patch('/:contactId/favorite', asyncWrapper(patchContactStatus)) // Роут для статуса
 
 module.exports = router
