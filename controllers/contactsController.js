@@ -1,7 +1,7 @@
 // Контроллеры - логика обработки маршрутов
 
 // Импорт функций для работы с БД
-const { getAllContacts, getContactById, addContact, removeContact, updateContact, updateContactStatus } = require('../model')
+const { getAllContacts, getContactById, addContact, removeContact, updateContact, updateContactStatus } = require('../services/contactsService')
 
 // Получение всех контактов
 const getContacts = async (req, res) => {

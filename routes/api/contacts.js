@@ -12,7 +12,8 @@ const {
 
 const {
   addContactValidation,
-  patchContactValidation
+  patchContactValidation,
+  patchContactStatusValidation
 } = require('../../middlewares/validation') // Валидации Joi
 
 const { asyncWrapper } = require('../../helpers/asyncWrapper') // Мидлвар универсального обработчика try catch
@@ -22,6 +23,6 @@ router.get('/:contactId', asyncWrapper(getContactsById)) // Роут для ко
 router.post('/', addContactValidation, asyncWrapper(addContacts)) // Роут для создания контакта
 router.patch('/:contactId', patchContactValidation, asyncWrapper(patchContact)) // Роут для обновления контакта
 router.delete('/:contactId', asyncWrapper(deleteContact)) // Роут для удаления контакта
-router.patch('/:contactId/favorite', asyncWrapper(patchContactStatus)) // Роут для статуса
+router.patch('/:contactId/favorite', patchContactStatusValidation, asyncWrapper(patchContactStatus)) // Роут для статуса
 
 module.exports = router

@@ -2,12 +2,17 @@
 const mongoose = require('mongoose')
 const URI = process.env.DB_HOST
 
-const db = mongoose.connect(URI, {
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-  useNewUrlParser: true,
-  useFindAndModify: false,
-})
+// Подключение к базе
+const db = async () => {
+  return await mongoose.connect(URI,
+    {
+      useUnifiedTopology: true,
+      useCreateIndex: true,
+      useNewUrlParser: true,
+      useFindAndModify: false,
+    }
+  )
+}
 
 // Консолит подключение к базе
 mongoose.connection.on('connected', (_) => {
