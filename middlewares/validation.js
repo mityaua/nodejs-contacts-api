@@ -1,6 +1,6 @@
 // Мидлвар для валидации
 const Joi = require('joi')
-// Joi.objectId = require('joi-objectid')(Joi) // не валидирует id
+Joi.objectId = require('joi-objectid')(Joi)
 
 // Схема валидации создания контакта
 const schemaAddContact = Joi.object({
@@ -29,14 +29,28 @@ const schemaUpdateContactStatus = Joi.object({
   favorite: Joi.boolean().required()
 })
 
-// Мидвар для обработки ошибок валидации
+// Схема валидации Id документа
+const schemaId = Joi.object({
+  contactId: Joi.objectId(),
+})
+
+// Мидлвар для обработки ошибок валидации body
 const validate = (schema, res, req, next) => {
-  const validationLogs = schema.validate(req.body)
+  const validationBody = schema.validate(req.body)
 
-  if (validationLogs.error) {
-    return res.status(400).json({ message: validationLogs.error.message.replace(/"/g, '') })
+  if (validationBody.error) {
+    return res.status(400).json({ message: validationBody.error.message.replace(/"/g, '') })
   }
+  next()
+}
 
+// Мидлвар для обработки ошибок валидации Id
+const validateId = (schema, res, req, next) => {
+  const validationID = schema.validate(req.params)
+
+  if (validationID.error) {
+    return res.status(400).json({ message: validationID.error.message.replace(/"/g, '') })
+  }
   next()
 }
 
@@ -49,5 +63,8 @@ module.exports = {
   },
   updateContactStatusValidation: (req, res, next) => {
     return validate(schemaUpdateContactStatus, res, req, next)
-  }
+  },
+  idValidation: (req, res, next) => {
+    return validateId(schemaId, res, req, next)
+  },
 }
