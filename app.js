@@ -4,6 +4,7 @@ const cors = require('cors')
 require('dotenv').config()
 
 const contactsRouter = require('./routes/api/contacts')
+const { errorHandler } = require('./helpers/errorHandler')
 
 const app = express()
 
@@ -15,12 +16,12 @@ app.use(express.json())
 
 app.use('/api/contacts', contactsRouter)
 
+// Ответ на всех урлы, которые не заматчились с роутами
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' })
 })
 
-app.use((err, req, res, next) => {
-  res.status(500).json({ message: err.message.replace(/"/g, '') })
-})
+// Обработчик всех ошибок
+app.use(errorHandler)
 
 module.exports = app

@@ -1,5 +1,6 @@
 // Мидлвар для валидации
 const Joi = require('joi')
+// Joi.objectId = require('joi-objectid')(Joi) // не валидирует id
 
 // Схема валидации создания контакта
 const schemaAddContact = Joi.object({
@@ -13,7 +14,7 @@ const schemaAddContact = Joi.object({
 })
 
 // Схема валидации обновления контакта
-const schemaPatchContact = Joi.object({
+const schemaUpdateContact = Joi.object({
   name: Joi.string().alphanum().min(2).max(30).optional(),
   email: Joi.string()
     .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'org', 'ua', 'ru', 'gov', 'ca'] } }).optional(),
@@ -24,13 +25,13 @@ const schemaPatchContact = Joi.object({
 }).min(1)
 
 // Схема валидации обновления статуса контакта
-const schemaPatchContactStatus = Joi.object({
+const schemaUpdateContactStatus = Joi.object({
   favorite: Joi.boolean().required()
 })
 
 // Мидвар для обработки ошибок валидации
-const validate = (schema, res, obj, next) => {
-  const validationLogs = schema.validate(obj)
+const validate = (schema, res, req, next) => {
+  const validationLogs = schema.validate(req.body)
 
   if (validationLogs.error) {
     return res.status(400).json({ message: validationLogs.error.message.replace(/"/g, '') })
@@ -41,12 +42,12 @@ const validate = (schema, res, obj, next) => {
 
 module.exports = {
   addContactValidation: (req, res, next) => {
-    return validate(schemaAddContact, res, req.body, next)
+    return validate(schemaAddContact, res, req, next)
   },
-  patchContactValidation: (req, res, next) => {
-    return validate(schemaPatchContact, res, req.body, next)
+  updateContactValidation: (req, res, next) => {
+    return validate(schemaUpdateContact, res, req, next)
   },
-  patchContactStatusValidation: (req, res, next) => {
-    return validate(schemaPatchContactStatus, res, req.body, next)
-  },
+  updateContactStatusValidation: (req, res, next) => {
+    return validate(schemaUpdateContactStatus, res, req, next)
+  }
 }

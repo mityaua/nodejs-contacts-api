@@ -18,6 +18,6 @@ const contactSchema = new Schema({
   },
 })
 
-const Contacts = mongoose.model('contact', contactSchema)
+const Contact = mongoose.model('contact', contactSchema)
 
-module.exports = Contacts
+module.exports = Contact

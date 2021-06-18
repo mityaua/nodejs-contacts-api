@@ -1,48 +1,46 @@
-const Contacts = require('../schemas/contacts')
+const Contact = require('../schemas/contacts')
 
 // Получает все контакты
 const getAllContacts = async () => {
-  const contacts = await Contacts.find()
+  const contacts = await Contact.find()
   return contacts
 }
 
 // Находит контакт по id
 const getContactById = async (contactId) => {
-  const contact = await Contacts.findById(contactId)
+  const contact = await Contact.findById(contactId)
   return contact
 }
 
 // Создает новый контакт
-const addContact = async (body) => {
-  const { name, email, phone } = body
-
-  const newContact = await Contacts.create({ name, email, phone })
+const addContact = async ({ name, email, phone, favorite }) => {
+  const newContact = await Contact.create({ name, email, phone, favorite })
   return newContact
-}
-
-// Удаляет контакт (возвращает неправильный ответ)
-const removeContact = async (contactId) => {
-  const contact = await Contacts.findByIdAndRemove(contactId)
-  return contact
 }
 
 // Обновляет контакт
 const updateContact = async (contactId, body) => {
-  const updatedContact = await Contacts.findByIdAndUpdate(contactId, body, { new: true })
+  const updatedContact = await Contact.findByIdAndUpdate(contactId, body, { new: true })
   return updatedContact
 }
 
-// Обновляет статус контакт
+// Обновляет статус контакт (set под вопросом!)
 const updateContactStatus = async (contactId, { favorite }) => {
-  const updatedContact = await Contacts.findByIdAndUpdate(contactId, { $set: { favorite } }, { new: true })
+  const updatedContact = await Contact.findByIdAndUpdate(contactId, { favorite }, { new: true })
   return updatedContact
+}
+
+// Удаляет контакт (возвращает неправильный ответ)
+const removeContact = async (contactId) => {
+  const contact = await Contact.findByIdAndRemove(contactId)
+  return contact
 }
 
 module.exports = {
   getAllContacts,
   getContactById,
   addContact,
-  removeContact,
   updateContact,
-  updateContactStatus
+  updateContactStatus,
+  removeContact
 }
