@@ -1,10 +1,7 @@
 const { login, logout } = require('../services/authService')
-const {
-  findUserByEmail,
-  createUser,
-} = require('../services/userService')
+const { findUserByEmail, createUser } = require('../services/userService')
 
-// Регистрация юзера
+// Регистрация юзера-------------------сделать валидацию даннных через Joi-------------------
 const regController = async (req, res) => {
   const { email, password, subscription } = req.body
 
@@ -19,9 +16,9 @@ const regController = async (req, res) => {
   res.status(201).json({ user: { email: newUser.email, subscription: newUser.subscription, } })
 }
 
-// Вход юзера
+// Вход юзера-------------------сделать валидацию даннных через Joi-------------------
 const loginController = async (req, res) => {
-  const { email, password, subscription } = req.body
+  const { email, password, subscription } = req.body // что делать с subscription? его нет в ответе
 
   const token = await login({ email, password })
 
@@ -29,14 +26,12 @@ const loginController = async (req, res) => {
     return res.status(200).json({ token, user: { email, subscription } })
   }
 
-  res.status(401).json({ message: 'Email or password is wrong' })
+  res.status(401).json({ message: 'Email or password is wrong' }) // почему вход с любым паролем?
 }
 
 // Выход юзера
 const logoutController = async (req, res) => {
-  const id = req.user.id
-  await logout(id)
-
+  await logout(req.user.id)
   res.status(204).json({ message: 'No Content' })
 }
 

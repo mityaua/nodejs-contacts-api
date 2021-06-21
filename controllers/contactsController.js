@@ -22,8 +22,7 @@ const getContactByIdController = async (req, res) => {
 
 // Создание контакта
 const addContactController = async (req, res) => {
-  const userId = req.user.id
-  const contact = await addContact(req.body, userId)
+  const contact = await addContact(req.body, req.user.id)
   res.status(201).json({ contact, status: 'success' })
 }
 
