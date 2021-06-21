@@ -21,8 +21,9 @@ const getContactByIdController = async (req, res) => {
 }
 
 // Создание контакта
-const addContactsController = async (req, res) => {
-  const contact = await addContact(req.body)
+const addContactController = async (req, res) => {
+  const userId = req.user.id
+  const contact = await addContact(req.body, userId)
   res.status(201).json({ contact, status: 'success' })
 }
 
@@ -62,7 +63,7 @@ const deleteContactController = async (req, res) => {
 module.exports = {
   getContactsController,
   getContactByIdController,
-  addContactsController,
+  addContactController,
   updateContactController,
   updateContactStatusController,
   deleteContactController,
