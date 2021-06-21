@@ -1,6 +1,6 @@
 const passport = require('passport')
 const { Strategy, ExtractJwt } = require('passport-jwt')
-const { findUserById } = require('../schemas/user')
+const { findUserById } = require('../services/userService')
 const SECRET_KEY = process.env.JWT_SECRET_KEY
 
 const params = {

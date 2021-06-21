@@ -32,7 +32,7 @@ userSchema.path('email').validate(function (value) {
 
 // Хук, перед сохранением пароля в базу (солит, хеширует)
 userSchema.pre('save', async function (next) {
-  if (this.isModified('password')) return next()
+  if (!this.isModified('password')) return next()
 
   this.password = await bcrypt.hash(this.password, bcrypt.genSaltSync(6))
 

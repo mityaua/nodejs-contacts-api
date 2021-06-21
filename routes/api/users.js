@@ -7,7 +7,7 @@ const {
   logoutController
 } = require('../../controllers/usersController') // Контроллеры маршрутов
 
-// const { } = require('../../middlewares/validation') // Валидации Joi
+// const { idValidation} = require('../../middlewares/validation') // Валидации Joi
 const guard = require('../../helpers/guard') // Мидлвар защиты данных
 
 const { asyncWrapper } = require('../../helpers/asyncWrapper') // Мидлвар универсального обработчика try catch

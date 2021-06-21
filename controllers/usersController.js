@@ -7,6 +7,7 @@ const {
 // Регистрация юзера
 const regController = async (req, res) => {
   const { email, password, subscription } = req.body
+
   const user = await findUserByEmail(email)
 
   if (user) {

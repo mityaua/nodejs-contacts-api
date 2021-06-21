@@ -2,13 +2,13 @@ const User = require('../schemas/user')
 
 // Находит юзера по id
 const findUserById = async (id) => {
-  const user = await User.findById(id)
+  const user = await User.findOne({ _id: id }) // уточнить за метод!!! findById()
   return user
 }
 
 // Находит юзера по email
 const findUserByEmail = async (email) => {
-  const user = await User.findById(email)
+  const user = await User.findOne({ email })
   return user
 }
 
