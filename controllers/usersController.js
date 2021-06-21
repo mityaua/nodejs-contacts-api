@@ -18,15 +18,15 @@ const regController = async (req, res) => {
 
 // Вход юзера-------------------сделать валидацию даннных через Joi-------------------
 const loginController = async (req, res) => {
-  const { email, password, subscription } = req.body // что делать с subscription? его нет в ответе
+  const { email, password, subscription } = req.body
 
   const token = await login({ email, password })
 
   if (token) {
-    return res.status(200).json({ token, user: { email, subscription } })
+    return res.status(200).json({ token, user: { email, subscription } }) // что делать с subscription? его нет в ответе
   }
 
-  res.status(401).json({ message: 'Email or password is wrong' }) // почему вход с любым паролем?
+  res.status(401).json({ message: 'Email or password is wrong' })
 }
 
 // Выход юзера

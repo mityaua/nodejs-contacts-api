@@ -39,7 +39,8 @@ userSchema.pre('save', async function (next) {
 
 // Сравнивает пароли при входе юзера (возвращает null если не совпадают)
 userSchema.methods.validPassword = async function (password) {
-  return await bcrypt.compare(password, this.password)
+  const result = await bcrypt.compare(password, this.password)
+  return result
 }
 
 // Валидация email в схеме
