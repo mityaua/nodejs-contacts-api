@@ -7,7 +7,7 @@ const SECRET_KEY = process.env.JWT_SECRET_KEY
 const login = async ({ email, password }) => {
   const user = await User.findUserByEmail(email)
 
-  // Если юзера нет или пароль не валидный - токен не возращаем (привет крабатону!)
+  // Если юзера нет или пароль не валидный - токен не возращаем
   if (!user || (!await user.validPassword(password))) {
     return null
   }

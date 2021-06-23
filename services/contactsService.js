@@ -24,13 +24,13 @@ const updateContact = async (contactId, body) => {
   return updatedContact
 }
 
-// Обновляет статус контакт (set под вопросом!)
+// Обновляет статус контакт
 const updateContactStatus = async (contactId, { favorite }) => {
   const updatedContact = await Contact.findByIdAndUpdate(contactId, { favorite }, { new: true })
   return updatedContact
 }
 
-// Удаляет контакт (возвращает неправильный ответ)
+// Удаляет контакт
 const removeContact = async (contactId) => {
   const contact = await Contact.findByIdAndRemove(contactId)
   return contact

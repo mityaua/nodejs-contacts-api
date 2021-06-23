@@ -11,11 +11,7 @@ const userSchema = new Schema({
   email: {
     type: String,
     required: [true, 'Email is required'],
-    unique: true,
-    validate(value) {
-      const emailRegEx = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i
-      return emailRegEx.test(String(value).toLowerCase())
-    }
+    unique: true
   },
   subscription: {
     type: String,
@@ -32,7 +28,7 @@ const userSchema = new Schema({
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next()
 
-  this.password = await bcrypt.hash(this.password, bcrypt.genSaltSync(9))
+  this.password = await bcrypt.hash(this.password, bcrypt.genSaltSync(9)) // заменить на асинхронный genSalt ?
 
   next()
 })
@@ -44,10 +40,10 @@ userSchema.methods.validPassword = async function (password) {
 }
 
 // Валидация email в схеме
-// userSchema.path('email').validate(function (value) {
-//   const emailRegEx = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i
-//   return emailRegEx.test(String(value).toLowerCase())
-// })
+userSchema.path('email').validate(function (value) {
+  const emailRegEx = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i
+  return emailRegEx.test(String(value).toLowerCase())
+})
 
 const User = mongoose.model('user', userSchema)
 

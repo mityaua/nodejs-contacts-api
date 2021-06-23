@@ -1,7 +1,7 @@
 const { login, logout } = require('../services/authService')
 const { findUserByEmail, createUser } = require('../services/userService')
 
-// Регистрация юзера-------------------сделать валидацию даннных через Joi-------------------
+// Регистрация юзера
 const regController = async (req, res) => {
   const { email, password, subscription } = req.body
 
@@ -16,7 +16,7 @@ const regController = async (req, res) => {
   res.status(201).json({ user: { email: newUser.email, subscription: newUser.subscription, } })
 }
 
-// Вход юзера-------------------сделать валидацию даннных через Joi-------------------
+// Вход юзера
 const loginController = async (req, res) => {
   const { email, password, subscription } = req.body
 
@@ -35,8 +35,19 @@ const logoutController = async (req, res) => {
   res.status(204).json({ message: 'No Content' })
 }
 
+// Текущий юзер - в работе!!!!
+const currentUserController = async (req, res) => {
+  console.log(req.user.id)
+
+  res.status(200).json({
+    email: 'example@example.com',
+    subscription: 'starter'
+  })
+}
+
 module.exports = {
   regController,
   loginController,
-  logoutController
+  logoutController,
+  currentUserController
 }
