@@ -1,5 +1,5 @@
 const { login, logout } = require('../services/authService')
-const { findUserByEmail, createUser } = require('../services/userService')
+const { findUserById, findUserByEmail, createUser } = require('../services/userService')
 
 // Регистрация юзера
 const regController = async (req, res) => {
@@ -18,12 +18,11 @@ const regController = async (req, res) => {
 
 // Вход юзера
 const loginController = async (req, res) => {
-  const { email, password, subscription } = req.body
-
-  const token = await login({ email, password })
+  const token = await login(req.body)
 
   if (token) {
-    return res.status(200).json({ token, user: { email, subscription } }) // что делать с subscription? его нет в ответе
+    const { email, subscription } = await findUserByEmail(req.body.email) // Чет сомнительно
+    return res.status(200).json({ token, user: { email, subscription } })
   }
 
   res.status(401).json({ message: 'Email or password is wrong' })
@@ -35,14 +34,11 @@ const logoutController = async (req, res) => {
   res.status(204).json({ message: 'No Content' })
 }
 
-// Текущий юзер - в работе!!!!
+// Текущий юзер
 const currentUserController = async (req, res) => {
-  console.log(req.user.id)
+  const { email, subscription } = await findUserById(req.user.id)
 
-  res.status(200).json({
-    email: 'example@example.com',
-    subscription: 'starter'
-  })
+  res.status(200).json({ email, subscription })
 }
 
 module.exports = {

@@ -8,7 +8,7 @@ const createUser = async (body) => {
 
 // Находит юзера в базе по id
 const findUserById = async (id) => {
-  const user = await User.findOne({ _id: id }) // уточнить за метод!!! findById()
+  const user = await User.findById(id) // заменено на findOne
   return user
 }
 
