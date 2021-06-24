@@ -1,9 +1,24 @@
 const Contact = require('../schemas/contacts')
 
 // Получает все контакты
-const getAllContacts = async (userId) => {
-  const contacts = await Contact.find({ owner: userId }).populate({ path: 'owner', select: 'email subscription' })
-  return contacts
+const getAllContacts = async (userId, query) => {
+  const { page = 1, limit = 20, offset = (page - 1) * limit, sortBy, sortByDesc, filter } = query
+
+  const result = await Contact.paginate({ owner: userId }, {
+    page,
+    limit,
+    offset,
+    sort: {
+      ...(sortBy ? { [`${sortBy}`]: 1 } : {}),
+      ...(sortByDesc ? { [`${sortByDesc}`]: -1 } : {}),
+    },
+    select: filter ? filter.split('|').join(' ') : '',
+    populate: { path: 'owner', select: 'email subscription' }
+  })
+
+  const { docs: contacts, totalDocs: total, totalPages } = result
+
+  return { contacts, total, totalPages, page: Number(page), limit: Number(limit), offset: Number(offset) }
 }
 
 // Находит контакт по id

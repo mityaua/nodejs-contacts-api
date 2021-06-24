@@ -16,7 +16,7 @@ const { asyncWrapper } = require('../../helpers/asyncWrapper') // Мидлвар
 router.post('/signup', regValidation, asyncWrapper(regController)) // Роут для регистрации юзера
 router.post('/login', loginValidation, asyncWrapper(loginController)) // Роут для входа юзера
 router.post('/logout', guard, asyncWrapper(logoutController)) // Роут для выхода юзера
-router.get('/current', guard, asyncWrapper(currentUserController)) // Роут для текущего юзера - ДОПОЛНИТЬ!
+router.get('/current', guard, asyncWrapper(currentUserController)) // Роут для текущего юзера
 // router.patch('/', guard, asyncWrapper(logoutController)) // Роут для обновления статуса - ДОПОЛНИТЬ! + валидация!
 
 module.exports = router

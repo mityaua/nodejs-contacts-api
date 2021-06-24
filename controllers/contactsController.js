@@ -5,8 +5,8 @@ const { getAllContacts, getContactById, addContact, removeContact, updateContact
 
 // Получение всех контактов
 const getContactsController = async (req, res) => {
-  const contacts = await getAllContacts(req.user.id)
-  res.status(200).json({ contacts, status: 'success' })
+  const contacts = await getAllContacts(req.user.id, req.query)
+  res.status(200).json({ ...contacts, status: 'success' })
 }
 
 // Получение контакта по id

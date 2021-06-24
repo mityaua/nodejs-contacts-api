@@ -11,7 +11,7 @@ const schemaRegUser = Joi.object({
     .min(5)
     .max(20)
     .required(),
-  subscription: Joi.string().default('starter'), // Под вопросом!
+  subscription: Joi.string().default('starter'),
 })
 
 // Схема валидации логина юзера
