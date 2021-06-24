@@ -2,7 +2,7 @@ const Contact = require('../schemas/contacts')
 
 // Получает все контакты
 const getAllContacts = async (userId) => {
-  const contacts = await Contact.find({ owner: userId })
+  const contacts = await Contact.find({ owner: userId }).populate({ path: 'owner', select: 'email subscription' })
   return contacts
 }
 
@@ -11,7 +11,7 @@ const getContactById = async (userId, contactId) => {
   const contact = await Contact.findOne({
     _id: contactId,
     owner: userId,
-  })
+  }).populate({ path: 'owner', select: 'email subscription' })
   return contact
 }
 
@@ -21,25 +21,21 @@ const addContact = async (userId, body) => {
   return newContact
 }
 
-// Обновляет контакт - обновляет чужой контакт почему-то!!!
+// Обновляет контакт - обновляет чужой контакт!
 const updateContact = async (userId, contactId, body) => {
-  const updatedContact = await Contact.findByIdAndUpdate({ _id: contactId, owner: userId, }, body, { new: true })
+  const updatedContact = await Contact.findByIdAndUpdate({ _id: contactId, owner: userId, }, body, { new: true }).populate({ path: 'owner', select: 'email subscription' })
   return updatedContact
 }
 
-// Обновляет статус контакта - обновляет чужой статус почему-то!!!
+// Обновляет статус контакта - обновляет чужой статус!
 const updateContactStatus = async (userId, contactId, { favorite }) => {
-  const updatedContact = await Contact.findByIdAndUpdate({ _id: contactId, owner: userId, }, { favorite }, { new: true })
+  const updatedContact = await Contact.findByIdAndUpdate({ _id: contactId, owner: userId, }, { favorite }, { new: true }).populate({ path: 'owner', select: 'email subscription' })
   return updatedContact
 }
 
-// Удаляет контакт - удаляет чужой контакт почему-то!!!
+// Удаляет контакт - удаляет чужой контакт!
 const removeContact = async (userId, contactId) => {
-  const contact = await Contact.findByIdAndRemove({
-    _id: contactId,
-    owner: userId,
-  })
-
+  const contact = await Contact.findByIdAndRemove({ _id: contactId, owner: userId, })
   return contact
 }
 

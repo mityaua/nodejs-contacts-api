@@ -21,7 +21,7 @@ const loginController = async (req, res) => {
   const token = await login(req.body)
 
   if (token) {
-    const { email, subscription } = await findUserByEmail(req.body.email) // Чет сомнительно
+    const { email, subscription } = await findUserByEmail(req.body.email)
     return res.status(200).json({ token, user: { email, subscription } })
   }
 
