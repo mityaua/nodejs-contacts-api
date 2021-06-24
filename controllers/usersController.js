@@ -36,9 +36,12 @@ const logoutController = async (req, res) => {
 
 // Текущий юзер
 const currentUserController = async (req, res) => {
-  const { email, subscription } = await findUserById(req.user.id)
+  const currentUser = await findUserById(req.user.id)
 
-  res.status(200).json({ email, subscription })
+  if (currentUser) {
+    const { email, subscription } = currentUser
+    res.status(200).json({ email, subscription })
+  }
 }
 
 module.exports = {

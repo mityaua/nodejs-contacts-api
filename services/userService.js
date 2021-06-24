@@ -8,7 +8,7 @@ const createUser = async (body) => {
 
 // Находит юзера в базе по id
 const findUserById = async (id) => {
-  const user = await User.findById(id) // заменено на findOne
+  const user = await User.findById(id) // заменено с findOne
   return user
 }
 
@@ -20,7 +20,7 @@ const findUserByEmail = async (email) => {
 
 // Обновляет токен юзера
 const updateToken = async (id, token) => {
-  await User.updateOne({ _id: id }, { token }) // уточнить за метод!!! findByIdAndUpdate()
+  await User.updateOne({ _id: id }, { token }) // заменено с findByIdAndUpdate()
 }
 
 module.exports = {
