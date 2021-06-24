@@ -1,38 +1,45 @@
 const Contact = require('../schemas/contacts')
 
 // Получает все контакты
-const getAllContacts = async () => {
-  const contacts = await Contact.find()
+const getAllContacts = async (userId) => {
+  const contacts = await Contact.find({ owner: userId })
   return contacts
 }
 
 // Находит контакт по id
-const getContactById = async (contactId) => {
-  const contact = await Contact.findById(contactId)
+const getContactById = async (userId, contactId) => {
+  const contact = await Contact.findOne({
+    _id: contactId,
+    owner: userId,
+  })
   return contact
 }
 
 // Создает новый контакт
-const addContact = async (body, userId) => {
+const addContact = async (userId, body) => {
   const newContact = await Contact.create({ ...body, owner: userId })
   return newContact
 }
 
-// Обновляет контакт
-const updateContact = async (contactId, body) => {
-  const updatedContact = await Contact.findByIdAndUpdate(contactId, body, { new: true })
+// Обновляет контакт - обновляет чужой контакт почему-то!!!
+const updateContact = async (userId, contactId, body) => {
+  const updatedContact = await Contact.findByIdAndUpdate({ _id: contactId, owner: userId, }, body, { new: true })
   return updatedContact
 }
 
-// Обновляет статус контакт
-const updateContactStatus = async (contactId, { favorite }) => {
-  const updatedContact = await Contact.findByIdAndUpdate(contactId, { favorite }, { new: true })
+// Обновляет статус контакта - обновляет чужой статус почему-то!!!
+const updateContactStatus = async (userId, contactId, { favorite }) => {
+  const updatedContact = await Contact.findByIdAndUpdate({ _id: contactId, owner: userId, }, { favorite }, { new: true })
   return updatedContact
 }
 
-// Удаляет контакт
-const removeContact = async (contactId) => {
-  const contact = await Contact.findByIdAndRemove(contactId)
+// Удаляет контакт - удаляет чужой контакт почему-то!!!
+const removeContact = async (userId, contactId) => {
+  const contact = await Contact.findByIdAndRemove({
+    _id: contactId,
+    owner: userId,
+  })
+
   return contact
 }
 
