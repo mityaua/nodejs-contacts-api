@@ -6,13 +6,11 @@ const regController = async (req, res) => {
   const { email, password, subscription } = req.body
 
   const user = await findUserByEmail(email)
-
   if (user) {
     return res.status(409).json({ message: 'Email in use' })
   }
 
   const newUser = await createUser({ email, password, subscription })
-
   res.status(201).json({ user: { email: newUser.email, subscription: newUser.subscription, } })
 }
 

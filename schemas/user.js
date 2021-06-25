@@ -24,13 +24,18 @@ const userSchema = new Schema({
   },
 })
 
+// Хук, хеширует и солит пароль перед сохранением в базу - Заменить на this.isNew ?
+// userSchema.pre('save', async function (next) {
+//   if (!this.isModified('password')) return next()
+//   this.password = await bcrypt.hash(this.password, bcrypt.genSaltSync(9)) // заменить на асинхронный genSalt ?
+//   next()
+// })
+
 // Хук, хеширует и солит пароль перед сохранением в базу
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next()
-
-  this.password = await bcrypt.hash(this.password, bcrypt.genSaltSync(9)) // заменить на асинхронный genSalt ?
-
-  next()
+userSchema.pre('save', async function () {
+  if (this.isNew) {
+    this.password = await bcrypt.hash(this.password, bcrypt.genSaltSync(9))
+  }
 })
 
 // Сравнивает пароли при входе юзера (возвращает null если не совпадают)

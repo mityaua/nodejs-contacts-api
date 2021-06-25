@@ -1,11 +1,11 @@
 const passport = require('passport')
 const { Strategy, ExtractJwt } = require('passport-jwt')
 const { findUserById } = require('../services/userService')
-const SECRET_KEY = process.env.JWT_SECRET_KEY
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY // секрет для токена
 
 // Вытягивает токен
 const params = {
-  secretOrKey: SECRET_KEY,
+  secretOrKey: JWT_SECRET_KEY,
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
 }
 

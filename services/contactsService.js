@@ -13,7 +13,7 @@ const getAllContacts = async (userId, query) => {
       ...(sortByDesc ? { [`${sortByDesc}`]: -1 } : {}),
     },
     select: filter ? filter.split('|').join(' ') : '',
-    populate: { path: 'owner', select: 'email subscription' }
+    populate: { path: 'owner', select: 'email subscription' },
   })
 
   const { docs: contacts, totalDocs: total, totalPages } = result
@@ -26,7 +26,7 @@ const getContactById = async (userId, contactId) => {
   const contact = await Contact.findOne({
     _id: contactId,
     owner: userId,
-  }).populate({ path: 'owner', select: 'email subscription' })
+  }).populate({ path: 'owner', select: 'email subscription' }).select({ __v: 0 })
   return contact
 }
 
@@ -38,13 +38,13 @@ const addContact = async (userId, body) => {
 
 // Обновляет контакт - обновляет чужой контакт!
 const updateContact = async (userId, contactId, body) => {
-  const updatedContact = await Contact.findByIdAndUpdate({ _id: contactId, owner: userId, }, body, { new: true }).populate({ path: 'owner', select: 'email subscription' })
+  const updatedContact = await Contact.findByIdAndUpdate({ _id: contactId, owner: userId, }, body, { new: true }).populate({ path: 'owner', select: 'email subscription' }).select({ __v: 0 })
   return updatedContact
 }
 
 // Обновляет статус контакта - обновляет чужой статус!
 const updateContactStatus = async (userId, contactId, { favorite }) => {
-  const updatedContact = await Contact.findByIdAndUpdate({ _id: contactId, owner: userId, }, { favorite }, { new: true }).populate({ path: 'owner', select: 'email subscription' })
+  const updatedContact = await Contact.findByIdAndUpdate({ _id: contactId, owner: userId, }, { favorite }, { new: true }).populate({ path: 'owner', select: 'email subscription' }).select({ __v: 0 })
   return updatedContact
 }
 
