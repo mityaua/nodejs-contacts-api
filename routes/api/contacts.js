@@ -18,9 +18,9 @@ const {
 } = require('../../middlewares/contactValidation') // Валидации Joi
 
 const { asyncWrapper } = require('../../helpers/asyncWrapper') // Мидлвар универсального обработчика try catch
-const guard = require('../../helpers/guard')
+const { protect } = require('../../middlewares/authProtect') // Мидлвар на аутентификацию
 
-router.use(guard) // Мидлвар защиты роутов
+router.use(protect) // Мидлвар защиты роутов
 
 router.get('/', asyncWrapper(getContactsController)) // Роут для списка всех контактов
 router.get('/:contactId', idValidation, asyncWrapper(getContactByIdController)) // Роут для контакта по id

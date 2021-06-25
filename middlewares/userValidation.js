@@ -1,27 +1,24 @@
 // Мидлвар для валидации
 const Joi = require('joi')
+const { SubTypes } = require('../helpers/constants')
 
-// Схема валидации регистрации юзера
-const schemaRegUser = Joi.object({
+// Схема валидации регистрации и логина юзера
+const schemaRegLogUser = Joi.object({
   email: Joi.string()
     .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'org', 'ua', 'ru', 'gov', 'ca'] } })
     .pattern(/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i)
     .required(),
   password: Joi.string()
-    .min(5)
-    .max(20)
+    // .pattern(/^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{6,})\S$/)
     .required(),
-  subscription: Joi.string().default('starter'),
+  subscription: Joi.string().default(SubTypes.STARTER),
 })
 
-// Схема валидации логина юзера
-const schemaLoginUser = Joi.object({
-  email: Joi.string()
-    .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'org', 'ua', 'ru', 'gov', 'ca'] } })
-    .pattern(/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i)
+// Схема валидации обновления подписки
+const schemaSubscriptionUser = Joi.object({
+  subscription: Joi.any()
+    .valid(SubTypes.STARTER, SubTypes.PRO, SubTypes.BUSINESS)
     .required(),
-  password: Joi.string()
-    .required()
 })
 
 // Мидлвар для обработки ошибок валидации body
@@ -35,10 +32,10 @@ const validate = (schema, res, req, next) => {
 }
 
 module.exports = {
-  regValidation: (req, res, next) => {
-    return validate(schemaRegUser, res, req, next)
+  regLogValidation: (req, res, next) => {
+    return validate(schemaRegLogUser, res, req, next)
   },
-  loginValidation: (req, res, next) => {
-    return validate(schemaLoginUser, res, req, next)
+  subscriptionValidation: (req, res, next) => {
+    return validate(schemaSubscriptionUser, res, req, next)
   }
 }

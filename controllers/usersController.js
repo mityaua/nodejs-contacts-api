@@ -1,17 +1,16 @@
 const { login, logout } = require('../services/authService')
-const { findUserById, findUserByEmail, createUser } = require('../services/userService')
+const { createUser, findUserById, findUserByEmail, updateSubscription } = require('../services/userService')
 
 // Регистрация юзера
 const regController = async (req, res) => {
-  const { email, password, subscription } = req.body
+  const user = await findUserByEmail(req.body.email)
 
-  const user = await findUserByEmail(email)
   if (user) {
     return res.status(409).json({ message: 'Email in use' })
   }
 
-  const newUser = await createUser({ email, password, subscription })
-  res.status(201).json({ user: { email: newUser.email, subscription: newUser.subscription, } })
+  const { email, subscription } = await createUser(req.body)
+  res.status(201).json({ user: { email, subscription } })
 }
 
 // Вход юзера
@@ -42,9 +41,20 @@ const currentUserController = async (req, res) => {
   }
 }
 
+// Обновление подписки юзера
+const subscriptionController = async (req, res) => {
+  const result = await updateSubscription(req.user.id, req.body.subscription)
+
+  if (result) {
+    const { email, subscription } = result
+    res.status(200).json({ user: { email, subscription }, status: 'updated' })
+  }
+}
+
 module.exports = {
   regController,
   loginController,
   logoutController,
-  currentUserController
+  currentUserController,
+  subscriptionController
 }

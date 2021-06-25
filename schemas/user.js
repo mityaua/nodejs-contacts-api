@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 
 const { Schema } = mongoose
+const { SubTypes } = require('../helpers/constants')
 
 const userSchema = new Schema({
   password: {
@@ -15,8 +16,8 @@ const userSchema = new Schema({
   },
   subscription: {
     type: String,
-    enum: ['starter', 'pro', 'business'],
-    default: 'starter'
+    enum: [SubTypes.STARTER, SubTypes.PRO, SubTypes.BUSINESS],
+    default: SubTypes.STARTER
   },
   token: {
     type: String,
@@ -24,17 +25,10 @@ const userSchema = new Schema({
   },
 })
 
-// Хук, хеширует и солит пароль перед сохранением в базу - Заменить на this.isNew ?
-// userSchema.pre('save', async function (next) {
-//   if (!this.isModified('password')) return next()
-//   this.password = await bcrypt.hash(this.password, bcrypt.genSaltSync(9)) // заменить на асинхронный genSalt ?
-//   next()
-// })
-
 // Хук, хеширует и солит пароль перед сохранением в базу
 userSchema.pre('save', async function () {
   if (this.isNew) {
-    this.password = await bcrypt.hash(this.password, bcrypt.genSaltSync(9))
+    this.password = await bcrypt.hash(this.password, 9)
   }
 })
 

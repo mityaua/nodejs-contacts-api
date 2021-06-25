@@ -5,18 +5,18 @@ const {
   regController,
   loginController,
   logoutController,
-  currentUserController
+  currentUserController,
+  subscriptionController
 } = require('../../controllers/usersController') // Контроллеры маршрутов
 
-const { regValidation, loginValidation } = require('../../middlewares/userValidation') // Валидации Joi
-const guard = require('../../helpers/guard') // Мидлвар на запрет\разрешение прохода
-
+const { regLogValidation, subscriptionValidation } = require('../../middlewares/userValidation') // Валидации Joi
+const { protect } = require('../../middlewares/authProtect') // Мидлвар на аутентификацию
 const { asyncWrapper } = require('../../helpers/asyncWrapper') // Мидлвар универсального обработчика try catch
 
-router.post('/signup', regValidation, asyncWrapper(regController)) // Роут для регистрации юзера
-router.post('/login', loginValidation, asyncWrapper(loginController)) // Роут для входа юзера
-router.post('/logout', guard, asyncWrapper(logoutController)) // Роут для выхода юзера
-router.get('/current', guard, asyncWrapper(currentUserController)) // Роут для текущего юзера
-// router.patch('/', guard, asyncWrapper(logoutController)) // Роут для обновления статуса - ДОПОЛНИТЬ! + валидация!
+router.post('/signup', regLogValidation, asyncWrapper(regController)) // Роут для регистрации юзера
+router.post('/login', regLogValidation, asyncWrapper(loginController)) // Роут для входа юзера
+router.post('/logout', protect, asyncWrapper(logoutController)) // Роут для выхода юзера
+router.get('/current', protect, asyncWrapper(currentUserController)) // Роут для текущего юзера
+router.patch('/subscription', protect, subscriptionValidation, asyncWrapper(subscriptionController)) // Роут для обновления статуса
 
 module.exports = router

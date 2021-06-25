@@ -2,9 +2,15 @@ const Contact = require('../schemas/contacts')
 
 // Получает все контакты
 const getAllContacts = async (userId, query) => {
-  const { page = 1, limit = 20, offset = (page - 1) * limit, sortBy, sortByDesc, filter } = query
+  const { page = 1, limit = 20, offset = (page - 1) * limit, sortBy, sortByDesc, filter, favorite = null, } = query
 
-  const result = await Contact.paginate({ owner: userId }, {
+  const search = { owner: userId }
+
+  if (favorite !== null) {
+    search.favorite = favorite
+  }
+
+  const result = await Contact.paginate(search, {
     page,
     limit,
     offset,
@@ -36,21 +42,21 @@ const addContact = async (userId, body) => {
   return newContact
 }
 
-// Обновляет контакт - обновляет чужой контакт!
+// Обновляет контакт
 const updateContact = async (userId, contactId, body) => {
-  const updatedContact = await Contact.findByIdAndUpdate({ _id: contactId, owner: userId, }, body, { new: true }).populate({ path: 'owner', select: 'email subscription' }).select({ __v: 0 })
+  const updatedContact = await Contact.findOneAndUpdate({ _id: contactId, owner: userId, }, body, { new: true }).populate({ path: 'owner', select: 'email subscription' }).select({ __v: 0 })
   return updatedContact
 }
 
-// Обновляет статус контакта - обновляет чужой статус!
+// Обновляет статус контакта
 const updateContactStatus = async (userId, contactId, { favorite }) => {
-  const updatedContact = await Contact.findByIdAndUpdate({ _id: contactId, owner: userId, }, { favorite }, { new: true }).populate({ path: 'owner', select: 'email subscription' }).select({ __v: 0 })
+  const updatedContact = await Contact.findOneAndUpdate({ _id: contactId, owner: userId, }, { favorite }, { new: true }).populate({ path: 'owner', select: 'email subscription' }).select({ __v: 0 })
   return updatedContact
 }
 
-// Удаляет контакт - удаляет чужой контакт!
+// Удаляет контакт
 const removeContact = async (userId, contactId) => {
-  const contact = await Contact.findByIdAndRemove({ _id: contactId, owner: userId, })
+  const contact = await Contact.findOneAndRemove({ _id: contactId, owner: userId, })
   return contact
 }
 

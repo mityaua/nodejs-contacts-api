@@ -8,7 +8,7 @@ const createUser = async (body) => {
 
 // Находит юзера в базе по id
 const findUserById = async (id) => {
-  const user = await User.findById(id) // заменено с findOne
+  const user = await User.findById(id)
   return user
 }
 
@@ -20,12 +20,19 @@ const findUserByEmail = async (email) => {
 
 // Обновляет токен юзера
 const updateToken = async (id, token) => {
-  await User.updateOne({ _id: id }, { token }) // заменено с findByIdAndUpdate()
+  await User.updateOne({ _id: id }, { token })
+}
+
+// Обновляет подписку юзера
+const updateSubscription = async (id, subscription) => {
+  const user = await User.findOneAndUpdate({ _id: id }, { subscription }, { new: true })
+  return user
 }
 
 module.exports = {
   findUserById,
   findUserByEmail,
   createUser,
-  updateToken
+  updateToken,
+  updateSubscription
 }

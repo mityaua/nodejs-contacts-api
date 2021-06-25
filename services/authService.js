@@ -6,9 +6,10 @@ const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY // секрет для под�
 // Вход юзера
 const login = async ({ email, password }) => {
   const user = await User.findUserByEmail(email)
+  const isValidPassword = await user?.validPassword(password)
 
   // Если юзера нет или пароль не валидный - null вместо токена
-  if (!user || (!await user.validPassword(password))) {
+  if (!user || !isValidPassword) {
     return null
   }
 
