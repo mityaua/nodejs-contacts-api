@@ -1,7 +1,25 @@
+
 # REST API Contacts Application (NodeJS, Express, MongoDB)
 
 This is a bare-bones example of a contacts application providing a REST
 API to a MongoDB-backed model.
+
+ - [How To Install App](#install)
+ - [REST API](#rest-api)
+ - [Contacts Routes](#contacts)
+	 - [List of contacts](#get-list-of-contacts)
+	 - [Contact by Id](#get-contact-by-id)
+	 - [Create](#create-contact)
+	 - [Update](#update-contact)
+	 - [Update favorite field](#update-contact-favorite-field)
+	 - [Delete](#delete-contact)
+ - [Query Params For Contacts Routes](#query-params-for-contacts-list)
+ - [Users Routes](#users)
+	 - [Registration](#user-registration)
+	 - [Login](#user-login)
+	 - [Logout](#user-logout)
+	 - [Current user](#get-current-user)
+	 - [Update Subscription](#update-user-subscription)
 
 ## Install
 
@@ -14,6 +32,14 @@ API to a MongoDB-backed model.
 ## Run the app in development mode
 
     npm run start:dev
+    
+## Run the linter
+
+    npm run lint
+    
+## Run the linter in fix mode
+
+    npm run lint:fix
 
 # REST API
 
@@ -138,10 +164,15 @@ The REST API to the example app is described below.
 ### Requests
 
 `GET /api/contacts?page=1`
+
 `GET /api/contacts?limit=20`
+
 `GET /api/contacts?favorite=true`
+
 `GET /api/contacts?sortBy=name`
+
 `GET /api/contacts?sortByDesc=name`
+
 `GET /api/contacts?filter=email`
 
     HTTP/1.1
@@ -181,7 +212,6 @@ The REST API to the example app is described below.
 
     HTTP/1.1
     Host: localhost:7070
-    Authorization: Bearer
 
     Body: { "email": "", "subscription": "" }
 
