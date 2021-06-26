@@ -3,6 +3,7 @@ const db = require('../db')
 
 const PORT = process.env.PORT || 3000
 
+// Старт сервера с подключением к базе
 const start = async () => {
   try {
     await db()

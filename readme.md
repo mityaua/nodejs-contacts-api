@@ -1,31 +1,274 @@
-## GoIT Node.js Course Template Homework
 
-Выполните форк этого репозитория для выполнения домашних заданий (2-6)
-Форк создаст репозиторий на вашем http://github.com
+# REST API Contacts Application (NodeJS, Express, MongoDB)
 
-Добавьте ментора в коллаборацию
+This is a bare-bones example of a contacts application providing a REST
+API to a MongoDB-backed model.
 
-Для каждой домашней работы создавайте свою ветку.
+ - [How To Install App](#install)
+ - [REST API](#rest-api)
+ - [Contacts Routes](#contacts)
+	 - [List of contacts](#get-list-of-contacts)
+	 - [Contact by Id](#get-contact-by-id)
+	 - [Create](#create-contact)
+	 - [Update](#update-contact)
+	 - [Update favorite field](#update-contact-favorite-field)
+	 - [Delete](#delete-contact)
+ - [Query Params For Contacts Routes](#query-params-for-contacts-list)
+ - [Users Routes](#users)
+	 - [Registration](#user-registration)
+	 - [Login](#user-login)
+	 - [Logout](#user-logout)
+	 - [Current user](#get-current-user)
+	 - [Update Subscription](#update-user-subscription)
 
-- hw02
-- hw03
-- hw04
-- hw05
-- hw06
+## Install
 
-Каждая новая ветка для дз должна делаться с master
+    npm install
 
-После того как вы закончили выполнять домашнее задание в своей ветке, необходимо сделать пулл-реквест (PR). Потом добавить ментора для ревью кода. Только после того как ментор заапрувит PR, вы можете выполнить мердж ветки с домашним заданием в мастер.
+## Run the app in production mode
 
-Внимательно читайте комментарии ментора. Исправьте замечания и сделайте коммит в ветке с домашним заданием. Изменения подтянуться в PR автоматически после того как вы отправите коммит с исправлениями на github
-После исправления снова добавьте ментора на ревью кода.
+    npm start
 
-- При сдаче домашней работы есть ссылка на PR
-- JS-код чистый и понятный, для форматирования используется Prettier
+## Run the app in development mode
 
-### Команды:
+    npm run start:dev
+    
+## Run the linter
 
-- `npm start` &mdash; старт сервера в режиме production
-- `npm run start:dev` &mdash; старт сервера в режиме разработки (development)
-- `npm run lint` &mdash; запустить выполнение проверки кода с eslint, необходимо выполнять перед каждым PR и исправлять все ошибки линтера
-- `npm lint:fix` &mdash; та же проверка линтера, но с автоматическими исправлениями простых ошибок
+    npm run lint
+    
+## Run the linter in fix mode
+
+    npm run lint:fix
+
+# REST API
+
+The REST API to the example app is described below.
+
+# Contacts
+
+## Get list of contacts
+
+### Request
+
+`GET /api/contacts/`
+
+    HTTP/1.1
+    Host: localhost:7070
+    Authorization: Bearer
+
+### Response
+
+    HTTP/1.1 200 OK
+    Status: success
+    Content-Type: application/json
+
+    "contacts": []
+
+## Get contact by id
+
+### Request
+
+`GET /api/contacts/:id`
+
+    HTTP/1.1
+    Host: localhost:7070
+    Authorization: Bearer
+
+### Response
+
+    HTTP/1.1 200 OK
+    Status: success
+    Content-Type: application/json
+
+    "contact": { "favorite": boolean, "_id": "", "name": "", "email": "", "phone": "", "owner": { } }
+
+## Create contact
+
+### Request
+
+`POST /api/contacts/`
+
+    HTTP/1.1
+    Host: localhost:7070
+    Authorization: Bearer
+
+    Body: { "name": "", "email": "", "phone": "" }
+
+### Response
+
+    HTTP/1.1 201 OK
+    Status: success
+    Content-Type: application/json
+
+    "contact": { "favorite": boolean, "_id": "", "name": "", "email": "", "phone": "", "owner": "", "__v": number }
+
+## Update contact
+
+### Request
+
+`PATCH /api/contacts/:id`
+
+    HTTP/1.1
+    Host: localhost:7070
+    Authorization: Bearer
+
+    Body: { "favorite": boolean, "name": "", "email": "", "phone": "" }
+
+### Response
+
+    HTTP/1.1 200 OK
+    Status: success
+    Content-Type: application/json
+
+    "contact": { "favorite": boolean, "_id": "", "name": "", "email": "", "phone": "", "owner": { } }
+
+## Update contact favorite field
+
+### Request
+
+`PATCH /api/contacts/:id/favorite`
+
+    HTTP/1.1
+    Host: localhost:7070
+    Authorization: Bearer
+
+    Body: { "favorite": boolean }
+
+### Response
+
+    HTTP/1.1 200 OK
+    Status: success
+    Content-Type: application/json
+
+    "contact": { "favorite": boolean, "_id": "", "name": "", "email": "", "phone": "", "owner": { } }
+
+## Delete contact
+
+### Request
+
+`DELETE /api/contacts/:id`
+
+    HTTP/1.1
+    Host: localhost:7070
+    Authorization: Bearer
+
+### Response
+
+    HTTP/1.1 200 OK
+    Status: contact deleted
+    Content-Type: application/json
+
+# Query params for contacts list
+
+### Requests
+
+`GET /api/contacts?page=1`
+
+`GET /api/contacts?limit=20`
+
+`GET /api/contacts?favorite=true`
+
+`GET /api/contacts?sortBy=name`
+
+`GET /api/contacts?sortByDesc=name`
+
+`GET /api/contacts?filter=email`
+
+    HTTP/1.1
+    Host: localhost:7070
+    Authorization: Bearer
+
+### Response
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+# Users
+
+## User Registration
+
+### Request
+
+`POST /api/users/signup`
+
+    HTTP/1.1
+    Host: localhost:7070
+
+    Body: { "email": "", "subscription": "" }
+
+### Response
+
+    HTTP/1.1 201 Created
+    Content-Type: application/json
+
+    { "user": { "email": "", "subscription": "" } }
+
+## User Login
+
+### Request
+
+`POST /api/users/login`
+
+    HTTP/1.1
+    Host: localhost:7070
+
+    Body: { "email": "", "subscription": "" }
+
+### Response
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    { "token": "", "user": { "email": "", "subscription": "" } }
+
+## User Logout
+
+### Request
+
+`POST /api/users/logout`
+
+    HTTP/1.1
+    Host: localhost:7070
+    Authorization: Bearer
+
+### Response
+
+    HTTP/1.1 204 No Content
+
+## Get Current User
+
+### Request
+
+`GET /api/users/current`
+
+    HTTP/1.1
+    Host: localhost:7070
+    Authorization: Bearer
+
+### Response
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    { "email": "", "subscription": "" }
+
+## Update User Subscription
+
+### Request
+
+`PATCH /api/users/subscription`
+
+    HTTP/1.1
+    Host: localhost:7070
+    Authorization: Bearer
+
+    Body: { "subscription": ['starter', 'pro', 'business'], }
+
+### Response
+
+    HTTP/1.1 200 OK
+    Status: updated
+    Content-Type: application/json
+
+    { "user": { "email": "", "subscription": "" } }
