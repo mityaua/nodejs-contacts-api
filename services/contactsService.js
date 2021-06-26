@@ -1,16 +1,16 @@
-const Contact = require('../schemas/contacts')
+const Contact = require('../models/contacts')
 
 // Получает все контакты
 const getAllContacts = async (userId, query) => {
   const { page = 1, limit = 20, offset = (page - 1) * limit, sortBy, sortByDesc, filter, favorite = null, } = query
 
-  const search = { owner: userId }
+  const params = { owner: userId }
 
   if (favorite !== null) {
-    search.favorite = favorite
+    params.favorite = favorite
   }
 
-  const result = await Contact.paginate(search, {
+  const result = await Contact.paginate(params, {
     page,
     limit,
     offset,

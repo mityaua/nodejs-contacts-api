@@ -9,7 +9,7 @@ const schemaRegLogUser = Joi.object({
     .pattern(/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i)
     .required(),
   password: Joi.string()
-    // .pattern(/^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{6,})\S$/)
+    .pattern(/^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{6,})\S$/)
     .required(),
   subscription: Joi.string().default(SubTypes.STARTER),
 })

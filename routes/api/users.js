@@ -10,7 +10,7 @@ const {
 } = require('../../controllers/usersController') // Контроллеры маршрутов
 
 const { regLogValidation, subscriptionValidation } = require('../../middlewares/userValidation') // Валидации Joi
-const { protect } = require('../../middlewares/authProtect') // Мидлвар на аутентификацию
+const { protect } = require('../../middlewares/protect') // Мидлвар протекции роутов
 const { asyncWrapper } = require('../../helpers/asyncWrapper') // Мидлвар универсального обработчика try catch
 
 router.post('/signup', regLogValidation, asyncWrapper(regController)) // Роут для регистрации юзера

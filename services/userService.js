@@ -1,4 +1,4 @@
-const User = require('../schemas/user')
+const User = require('../models/user')
 
 // Создает нового юзера в базе
 const createUser = async (body) => {

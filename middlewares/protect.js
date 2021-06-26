@@ -10,8 +10,8 @@ const protect = async (req, res, next) => {
   try {
     const token = req.headers.authorization.split(' ')[1]
 
-    jwt.verify(token, JWT_SECRET_KEY, async (error, decoded) => {
-      const user = await User.findUserById(decoded?.id)
+    jwt.verify(token, JWT_SECRET_KEY, async (error, decodedUser) => {
+      const user = await User.findUserById(decodedUser?.id)
 
       if (error || !user || !user.token || user.token !== token) {
         return res.status(401).json({ message: 'Invalide token' })

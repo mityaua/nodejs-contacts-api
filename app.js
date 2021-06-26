@@ -21,12 +21,11 @@ app.use(express.json({ limit: 1000 }))
 app.use('/api/users', usersRouter)
 app.use('/api/contacts', contactsRouter)
 
-// Ответ на всех урлы, которые не заматчились с роутами
+// Ответ на всех урлы, которые не заматчились
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' })
 })
 
-// Обработчик всех ошибок
-app.use(errorHandler)
+app.use(errorHandler) // Обработчик всех ошибок
 
 module.exports = app
