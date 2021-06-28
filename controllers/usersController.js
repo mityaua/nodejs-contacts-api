@@ -1,7 +1,7 @@
 const { login, logout } = require('../services/authService')
-const { createUser, findUserById, findUserByEmail, updateSubscription } = require('../services/userService')
+const { createUser, findUserById, findUserByEmail, updateSubscription, updateAvatar } = require('../services/userService')
 
-// Регистрация юзера
+// Контроллер регистрации юзера
 const regController = async (req, res) => {
   const user = await findUserByEmail(req.body.email)
 
@@ -9,39 +9,39 @@ const regController = async (req, res) => {
     return res.status(409).json({ message: 'Email in use' })
   }
 
-  const { email, subscription } = await createUser(req.body)
-  res.status(201).json({ user: { email, subscription } })
+  const { email, subscription, avatarURL } = await createUser(req.body)
+  res.status(201).json({ user: { email, subscription, avatarURL } })
 }
 
-// Вход юзера
+// Контроллер входа юзера
 const loginController = async (req, res) => {
   const token = await login(req.body)
 
   if (token) {
-    const { email, subscription } = await findUserByEmail(req.body.email)
-    return res.status(200).json({ token, user: { email, subscription } })
+    const { email, subscription, avatarURL } = await findUserByEmail(req.body.email)
+    return res.status(200).json({ token, user: { email, subscription, avatarURL } })
   }
 
   res.status(401).json({ message: 'Email or password is wrong' })
 }
 
-// Выход юзера
+// Контроллер выхода юзера
 const logoutController = async (req, res) => {
   await logout(req.user.id)
   res.status(204).json({ message: 'No Content' })
 }
 
-// Текущий юзер
+// Контроллер текущего юзера
 const currentUserController = async (req, res) => {
   const currentUser = await findUserById(req.user.id)
 
   if (currentUser) {
-    const { email, subscription } = currentUser
-    res.status(200).json({ email, subscription })
+    const { email, subscription, avatarURL } = currentUser
+    res.status(200).json({ email, subscription, avatarURL })
   }
 }
 
-// Обновление подписки юзера
+// Контроллер подписки юзера
 const subscriptionController = async (req, res) => {
   const result = await updateSubscription(req.user.id, req.body.subscription)
 
@@ -51,10 +51,19 @@ const subscriptionController = async (req, res) => {
   }
 }
 
+// Контроллер аватара юзера
+const avatarController = async (req, res) => {
+  if (req.file) {
+    const url = await updateAvatar(req.user.id, req.file)
+    res.status(200).json({ avatarURL: url })
+  }
+}
+
 module.exports = {
   regController,
   loginController,
   logoutController,
   currentUserController,
-  subscriptionController
+  subscriptionController,
+  avatarController
 }
