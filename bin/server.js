@@ -8,12 +8,12 @@ const PORT = process.env.PORT || 3000
 const UPLOAD_DIR = path.join(process.cwd(), process.env.UPLOAD_DIR)
 const AVATARS_DIR = path.join(process.cwd(), 'public', 'avatars')
 
-// Проверяет права на запись (нужно вынести отдельно)
+// Проверяет права на запись (нужно вынести отдельно !!!)
 const isAccessible = async (path) => {
   return await fs.access(path).then(() => true).catch(() => false)
 }
 
-// Создает папку, если есть права на запись (нужно вынести отдельно)
+// Создает папку, если есть права на запись (нужно вынести отдельно !!!)
 const createFoldereIsNotExist = async (folder) => {
   if (!(await isAccessible(folder))) {
     await fs.mkdir(folder)
