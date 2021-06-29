@@ -34,14 +34,21 @@ const updateSubscription = async (id, subscription) => {
   return user
 }
 
-// Обновляет аватар юзера - нужно получить ссылку на новый аватар + обновить у юзера в базе + удалить старый аватар!!! findOne, findOneAndUpdate
-const updateAvatar = async (id, file) => {
-  const img = await Jimp.read(file.path)
-  await img.autocrop().cover(250, 250, Jimp.HORIZONTAL_ALIGN_CENTER || Jimp.VERTICAL_ALIGN_MIDDLE).quality(75).writeAsync(file.path)
-  await fs.rename(file.path, path.join(AVATARS_DIR, file.originalname)) // Сделать уникальным для юзера
+// Обрабатывает аватар юзера (кроп + ресайз + качество + созранение)
+const normalizeAvatar = async (filePath) => {
+  const img = await Jimp.read(filePath)
+  await img.autocrop().cover(250, 250, Jimp.HORIZONTAL_ALIGN_CENTER || Jimp.VERTICAL_ALIGN_MIDDLE).quality(75).writeAsync(filePath)
+}
 
-  const avatar = 'тут будет ссылка на изображение'
-  return avatar
+// Обновляет аватар юзера - нужно обновить у юзера в базе + удалить старый аватар!!! findOne, findOneAndUpdate
+const updateAvatar = async (id, file) => {
+  await normalizeAvatar(file.path)
+
+  await fs.rename(file.path, path.join(AVATARS_DIR, file.filename)) // Перенос в папку с аватарами
+
+  const avatarURL = path.join(AVATARS_DIR, file.filename) // Ссылка на новый аватар
+
+  return avatarURL
 }
 
 module.exports = {

@@ -1,6 +1,9 @@
+
 // Обрабатывает загружаемые изображения и переносит их во временную папку
 const path = require('path')
 const multer = require('multer')
+const { customAlphabet } = require('nanoid')
+const nanoid = customAlphabet('1234567890abcdef', 10)
 
 const UPLOAD_DIR = path.join(process.cwd(), process.env.UPLOAD_DIR)
 
@@ -9,7 +12,7 @@ const storage = multer.diskStorage({
     cb(null, UPLOAD_DIR)
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname)
+    cb(null, nanoid() + path.extname(file.originalname))
   }
 })
 
