@@ -1,6 +1,6 @@
 const fs = require('fs').promises
 const path = require('path')
-const jimp = require('jimp')
+const Jimp = require('jimp')
 const User = require('../models/user')
 
 const AVATARS_DIR = path.join(process.cwd(), 'public', 'avatars')
@@ -36,8 +36,8 @@ const updateSubscription = async (id, subscription) => {
 
 // Обновляет аватар юзера - нужно получить ссылку на новый аватар + обновить у юзера в базе + удалить старый аватар!!! findOne, findOneAndUpdate
 const updateAvatar = async (id, file) => {
-  const img = await jimp.read(file.path)
-  await img.autocrop().cover(250, 250, jimp.HORIZONTAL_ALIGN_CENTER || jimp.VERTICAL_ALIGN_MIDDLE).writeAsync(file.path)
+  const img = await Jimp.read(file.path)
+  await img.autocrop().cover(250, 250, Jimp.HORIZONTAL_ALIGN_CENTER || Jimp.VERTICAL_ALIGN_MIDDLE).quality(75).writeAsync(file.path)
   await fs.rename(file.path, path.join(AVATARS_DIR, file.originalname)) // Сделать уникальным для юзера
 
   const avatar = 'тут будет ссылка на изображение'
