@@ -37,7 +37,7 @@ const currentUserController = async (req, res) => {
 
   if (currentUser) {
     const { email, subscription, avatarURL } = currentUser
-    res.status(200).json({ email, subscription, avatarURL })
+    return res.status(200).json({ email, subscription, avatarURL })
   }
 }
 
@@ -47,7 +47,7 @@ const subscriptionController = async (req, res) => {
 
   if (result) {
     const { email, subscription } = result
-    res.status(200).json({ user: { email, subscription }, status: 'updated' })
+    return res.status(200).json({ user: { email, subscription }, status: 'updated' })
   }
 }
 
@@ -55,8 +55,10 @@ const subscriptionController = async (req, res) => {
 const avatarController = async (req, res) => {
   if (req.file) {
     const url = await updateAvatar(req.user.id, req.file)
-    res.status(200).json({ avatarURL: url })
+    return res.status(200).json({ avatarURL: url })
   }
+
+  res.status(400).json({ message: 'Please, provide a valid file' })
 }
 
 module.exports = {
