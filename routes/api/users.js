@@ -10,7 +10,7 @@ const {
   avatarController
 } = require('../../controllers/usersController') // Контроллеры маршрутов
 
-const { regLogValidation, subscriptionValidation, avatarValidation } = require('../../middlewares/userValidation') // Валидации Joi
+const { regLogValidation, subscriptionValidation } = require('../../middlewares/userValidation') // Валидации Joi
 const { protect } = require('../../middlewares/protect') // Мидлвар протекции роутов
 const { asyncWrapper } = require('../../helpers/asyncWrapper') // Мидлвар универсального обработчика try catch
 const upload = require('../../helpers/upload') // Обработчик загрузок
@@ -20,6 +20,6 @@ router.post('/login', regLogValidation, asyncWrapper(loginController)) // Вхо
 router.post('/logout', protect, asyncWrapper(logoutController)) // Выход юзера
 router.get('/current', protect, asyncWrapper(currentUserController)) // Текущий юзер
 router.patch('/subscription', protect, subscriptionValidation, asyncWrapper(subscriptionController)) // Обновление подписки
-router.patch('/avatars', protect, avatarValidation, upload.single('avatar'), asyncWrapper(avatarController)) // Обновление аватара + сделать ВАЛИДАЦИЮ!!!!
+router.patch('/avatars', protect, upload.single('avatar'), asyncWrapper(avatarController)) // Обновление аватара
 
 module.exports = router

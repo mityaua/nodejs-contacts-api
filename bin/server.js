@@ -6,7 +6,7 @@ const fs = require('fs').promises
 
 const PORT = process.env.PORT || 3000
 const UPLOAD_DIR = path.join(process.cwd(), process.env.UPLOAD_DIR)
-const AVATARS_DIR = path.join(process.cwd(), 'public', 'avatars')
+const AVATARS_DIR = path.join(process.cwd(), process.env.PUBLIC_DIR, process.env.USERS_AVATARS)
 
 // Проверяет права на запись (нужно вынести отдельно !!!)
 const isAccessible = async (path) => {
