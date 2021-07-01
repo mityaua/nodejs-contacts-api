@@ -1,9 +1,9 @@
 const fs = require('fs').promises
 const path = require('path')
-const Jimp = require('jimp')
 
 const { login, logout } = require('../services/authService')
 const { createUser, findUserById, findUserByEmail, updateSubscription, updateAvatar } = require('../services/userService')
+const { editAvatar } = require('../helpers/avatarEditor')
 
 const AVATARS_DIR = path.join(process.cwd(), process.env.PUBLIC_DIR, process.env.USERS_AVATARS) // Директория с аватарами
 
@@ -57,19 +57,13 @@ const subscriptionController = async (req, res) => {
   }
 }
 
-// Обрабатывает аватар юзера (кроп + ресайз + качество + перезапись)
-const normalizeAvatar = async (filePath) => {
-  const img = await Jimp.read(filePath)
-  await img.autocrop().cover(250, 250, Jimp.HORIZONTAL_ALIGN_CENTER || Jimp.VERTICAL_ALIGN_MIDDLE).quality(75).writeAsync(filePath)
-}
-
 // Контроллер аватара юзера
 const avatarController = async (req, res) => {
   const filePath = req.file.path
   const fileName = req.file.filename
 
   if (req.file) {
-    await normalizeAvatar(filePath) // Обрабатывает картинку
+    await editAvatar(filePath) // Обрабатывает картинку
 
     await fs.rename(filePath, path.join(AVATARS_DIR, fileName)) // Переносит картинку в папку с аватарами
 
