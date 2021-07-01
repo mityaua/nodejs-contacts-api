@@ -21,11 +21,6 @@ const schemaSubscriptionUser = Joi.object({
     .required(),
 })
 
-// Схема валидации обновления аватара --- ДОПОЛНИТЬ ВАЛИДАЦИЮ!
-const schemaAvatarUpdate = Joi.object({
-  // avatar: Joi.object({}).required()
-})
-
 // Мидлвар для обработки ошибок валидации body
 const validate = (schema, res, req, next) => {
   const validationBody = schema.validate(req.body)
@@ -42,8 +37,5 @@ module.exports = {
   },
   subscriptionValidation: (req, res, next) => {
     return validate(schemaSubscriptionUser, res, req, next)
-  },
-  avatarValidation: (req, res, next) => {
-    return validate(schemaAvatarUpdate, res, req, next)
   }
 }

@@ -73,7 +73,7 @@ const avatarController = async (req, res) => {
     return res.status(200).json({ avatarURL: url })
   }
 
-  res.status(400).json({ message: 'Please, provide a valid file' })
+  res.status(400).json({ message: 'Please, provide valid file [jpeg, png, jpg]' })
 }
 
 module.exports = {
