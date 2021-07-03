@@ -20,6 +20,7 @@ API to a MongoDB-backed model.
 	 - [Logout](#user-logout)
 	 - [Current user](#get-current-user)
 	 - [Update Subscription](#update-user-subscription)
+     - [Update Avatar](#update-user-avatar)
 
 ## Install
 
@@ -63,7 +64,7 @@ The REST API to the example app is described below.
     Status: success
     Content-Type: application/json
 
-    "contacts": []
+    Body: "contacts": []
 
 ## Get contact by id
 
@@ -81,7 +82,7 @@ The REST API to the example app is described below.
     Status: success
     Content-Type: application/json
 
-    "contact": { "favorite": boolean, "_id": "", "name": "", "email": "", "phone": "", "owner": { } }
+    Body: "contact": { "favorite": boolean, "_id": "", "name": "", "email": "", "phone": "", "owner": { } }
 
 ## Create contact
 
@@ -101,7 +102,7 @@ The REST API to the example app is described below.
     Status: success
     Content-Type: application/json
 
-    "contact": { "favorite": boolean, "_id": "", "name": "", "email": "", "phone": "", "owner": "", "__v": number }
+    Body: "contact": { "favorite": boolean, "_id": "", "name": "", "email": "", "phone": "", "owner": "", "__v": number }
 
 ## Update contact
 
@@ -121,7 +122,7 @@ The REST API to the example app is described below.
     Status: success
     Content-Type: application/json
 
-    "contact": { "favorite": boolean, "_id": "", "name": "", "email": "", "phone": "", "owner": { } }
+    Body: "contact": { "favorite": boolean, "_id": "", "name": "", "email": "", "phone": "", "owner": { } }
 
 ## Update contact favorite field
 
@@ -141,7 +142,7 @@ The REST API to the example app is described below.
     Status: success
     Content-Type: application/json
 
-    "contact": { "favorite": boolean, "_id": "", "name": "", "email": "", "phone": "", "owner": { } }
+    Body: "contact": { "favorite": boolean, "_id": "", "name": "", "email": "", "phone": "", "owner": { } }
 
 ## Delete contact
 
@@ -202,7 +203,7 @@ The REST API to the example app is described below.
     HTTP/1.1 201 Created
     Content-Type: application/json
 
-    { "user": { "email": "", "subscription": "" } }
+    Body: { "user": { "email": "", "subscription": "" } }
 
 ## User Login
 
@@ -220,7 +221,7 @@ The REST API to the example app is described below.
     HTTP/1.1 200 OK
     Content-Type: application/json
 
-    { "token": "", "user": { "email": "", "subscription": "" } }
+    Body: { "token": "", "user": { "email": "", "subscription": "" } }
 
 ## User Logout
 
@@ -251,7 +252,7 @@ The REST API to the example app is described below.
     HTTP/1.1 200 OK
     Content-Type: application/json
 
-    { "email": "", "subscription": "" }
+    Body: { "email": "", "subscription": "" }
 
 ## Update User Subscription
 
@@ -271,4 +272,25 @@ The REST API to the example app is described below.
     Status: updated
     Content-Type: application/json
 
-    { "user": { "email": "", "subscription": "" } }
+    Body: { "user": { "email": "", "subscription": "" } }
+
+## Update User Avatar
+
+### Request
+
+`PATCH /api/users/avatars`
+
+    HTTP/1.1
+    Host: localhost:7070
+    Content-Type: multipart/form-data
+    Authorization: Bearer
+
+    Body: { "avatar": image }
+
+### Response
+
+    HTTP/1.1 200 OK
+    Status: updated
+    Content-Type: application/json
+
+    Body: { "avatarURL": link to image }
