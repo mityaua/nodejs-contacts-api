@@ -8,7 +8,7 @@ const UPLOAD_DIR = path.join(process.cwd(), process.env.UPLOAD_DIR)
 const AVATARS_DIR = path.join(process.cwd(), process.env.PUBLIC_DIR, process.env.USERS_AVATARS)
 
 // Старт сервера с подключением к базе
-const start = async () => {
+const server = async () => {
   try {
     await db()
 
@@ -22,4 +22,4 @@ const start = async () => {
   }
 }
 
-start()
+server()
