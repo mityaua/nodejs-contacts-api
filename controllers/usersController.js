@@ -1,7 +1,13 @@
-const { login, logout } = require('../services/authService')
-const { createUser, findUserById, findUserByEmail, updateSubscription } = require('../services/userService')
+const fs = require('fs').promises
+const path = require('path')
 
-// Регистрация юзера
+const { login, logout } = require('../services/authService')
+const { createUser, findUserById, findUserByEmail, updateSubscription, updateAvatar } = require('../services/userService')
+const { editAvatar } = require('../helpers/avatarEditor')
+
+const AVATARS_DIR = path.join(process.cwd(), process.env.PUBLIC_DIR, process.env.USERS_AVATARS) // Директория с аватарами
+
+// Контроллер регистрации юзера
 const regController = async (req, res) => {
   const user = await findUserByEmail(req.body.email)
 
@@ -9,46 +15,65 @@ const regController = async (req, res) => {
     return res.status(409).json({ message: 'Email in use' })
   }
 
-  const { email, subscription } = await createUser(req.body)
-  res.status(201).json({ user: { email, subscription } })
+  const { email, subscription, avatarURL } = await createUser(req.body)
+  res.status(201).json({ user: { email, subscription, avatarURL } })
 }
 
-// Вход юзера
+// Контроллер входа юзера
 const loginController = async (req, res) => {
   const token = await login(req.body)
 
   if (token) {
-    const { email, subscription } = await findUserByEmail(req.body.email)
-    return res.status(200).json({ token, user: { email, subscription } })
+    const { email, subscription, avatarURL } = await findUserByEmail(req.body.email)
+    return res.status(200).json({ token, user: { email, subscription, avatarURL } })
   }
 
   res.status(401).json({ message: 'Email or password is wrong' })
 }
 
-// Выход юзера
+// Контроллер выхода юзера
 const logoutController = async (req, res) => {
   await logout(req.user.id)
   res.status(204).json({ message: 'No Content' })
 }
 
-// Текущий юзер
+// Контроллер текущего юзера
 const currentUserController = async (req, res) => {
   const currentUser = await findUserById(req.user.id)
 
   if (currentUser) {
-    const { email, subscription } = currentUser
-    res.status(200).json({ email, subscription })
+    const { email, subscription, avatarURL } = currentUser
+    return res.status(200).json({ email, subscription, avatarURL })
   }
 }
 
-// Обновление подписки юзера
+// Контроллер подписки юзера
 const subscriptionController = async (req, res) => {
   const result = await updateSubscription(req.user.id, req.body.subscription)
 
   if (result) {
     const { email, subscription } = result
-    res.status(200).json({ user: { email, subscription }, status: 'updated' })
+    return res.status(200).json({ user: { email, subscription }, status: 'updated' })
   }
+}
+
+// Контроллер аватара юзера
+const avatarController = async (req, res) => {
+  const filePath = req.file.path
+  const fileName = req.file.filename
+
+  if (req.file) {
+    await editAvatar(filePath) // Обрабатывает картинку
+
+    await fs.rename(filePath, path.join(AVATARS_DIR, fileName)) // Переносит картинку в папку с аватарами
+
+    const newAvatarUrl = `${req.protocol}://${req.headers.host}/${process.env.USERS_AVATARS}/${fileName}` // Ссылка на новый аватар
+
+    const url = await updateAvatar(req.user.id, newAvatarUrl)
+    return res.status(200).json({ avatarURL: url })
+  }
+
+  res.status(400).json({ message: 'Please, provide valid file [jpeg, png, jpg]' })
 }
 
 module.exports = {
@@ -56,5 +81,6 @@ module.exports = {
   loginController,
   logoutController,
   currentUserController,
-  subscriptionController
+  subscriptionController,
+  avatarController
 }
