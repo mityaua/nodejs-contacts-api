@@ -1,4 +1,3 @@
-
 # REST API Contacts Application (NodeJS, Express, MongoDB)
 
 This is a bare-bones example of a contacts application providing a REST

@@ -1,8 +1,19 @@
+const { nanoid } = require('nanoid')
 const User = require('../models/user')
+const { sendEmail } = require('./emailService')
 
 // Создает нового юзера в базе
 const createUser = async (body) => {
-  const user = await new User(body)
+  const verifyToken = nanoid()
+  const { email } = body
+
+  try {
+    await sendEmail(verifyToken, email)
+  } catch (error) {
+    throw new Error('Smth wrong with email service')
+  }
+
+  const user = await new User({ ...body, verifyToken })
   return user.save()
 }
 
@@ -35,11 +46,24 @@ const updateAvatar = async (id, url) => {
   return avatarURL
 }
 
+// Верифицирует юзера - 🦀
+const verify = async (token) => {
+  const user = await User.findOne({ verifyToken: token })
+
+  if (!user) {
+    return false
+  }
+
+  await user.updateOne({ verify: true, verifyToken: null })
+  return true
+}
+
 module.exports = {
   findUserById,
   findUserByEmail,
   createUser,
   updateToken,
   updateSubscription,
-  updateAvatar
+  updateAvatar,
+  verify
 }

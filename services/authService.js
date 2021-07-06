@@ -8,8 +8,8 @@ const login = async ({ email, password }) => {
   const user = await User.findUserByEmail(email)
   const isValidPassword = await user?.validPassword(password)
 
-  // Если юзера нет или пароль не валидный - null вместо токена
-  if (!user || !isValidPassword) {
+  // Если юзера нет или пароль не валидный или verify не тру - возвращает null
+  if (!user || !isValidPassword || !user.verify) {
     return null
   }
 
