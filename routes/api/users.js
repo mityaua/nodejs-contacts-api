@@ -16,7 +16,8 @@ const { asyncWrapper } = require('../../helpers/asyncWrapper') // Мидлвар
 const upload = require('../../helpers/upload') // Обработчик загрузок
 
 router.post('/signup', regLogValidation, asyncWrapper(regController)) // Регистрация юзера
-router.post('/login', regLogValidation, asyncWrapper(loginController)) // Входа юзера
+router.post('/login', regLogValidation, asyncWrapper(loginController)) // Вход юзера
+// router.post('/verify/:verificationToken,', regLogValidation, asyncWrapper()) // Верификация юзера
 router.post('/logout', protect, asyncWrapper(logoutController)) // Выход юзера
 router.get('/current', protect, asyncWrapper(currentUserController)) // Текущий юзер
 router.patch('/subscription', protect, subscriptionValidation, asyncWrapper(subscriptionController)) // Обновление подписки
