@@ -7,11 +7,7 @@ const createUser = async (body) => {
   const verifyToken = nanoid()
   const { email } = body
 
-  try {
-    await sendEmail(verifyToken, email)
-  } catch (error) {
-    throw new Error('Smth wrong with email service')
-  }
+  await sendEmail(verifyToken, email)
 
   const user = await new User({ ...body, verifyToken })
   return user.save()
