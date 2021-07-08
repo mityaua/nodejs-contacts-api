@@ -13,6 +13,31 @@ const createUser = async (body) => {
   return user.save()
 }
 
+// Верифицирует юзера
+const verify = async (token) => {
+  const user = await User.findOne({ verifyToken: token })
+
+  if (user) {
+    await user.updateOne({ verify: true, verifyToken: null })
+    return true
+  }
+}
+
+// Повторно верифицирует юзера
+const reVerify = async (email) => {
+  const user = await User.findOne({ email, verify: false })
+
+  if (user) {
+    await sendEmail(user.verifyToken, email)
+    return true
+  }
+}
+
+// Обновляет токен юзера
+const updateToken = async (id, token) => {
+  await User.updateOne({ _id: id }, { token })
+}
+
 // Находит юзера в базе по id
 const findUserById = async (id) => {
   const user = await User.findById(id)
@@ -23,11 +48,6 @@ const findUserById = async (id) => {
 const findUserByEmail = async (email) => {
   const user = await User.findOne({ email })
   return user
-}
-
-// Обновляет токен юзера
-const updateToken = async (id, token) => {
-  await User.updateOne({ _id: id }, { token })
 }
 
 // Обновляет подписку юзера
@@ -42,18 +62,6 @@ const updateAvatar = async (id, url) => {
   return avatarURL
 }
 
-// Верифицирует юзера - 🦀
-const verify = async (token) => {
-  const user = await User.findOne({ verifyToken: token })
-
-  if (!user) {
-    return false
-  }
-
-  await user.updateOne({ verify: true, verifyToken: null })
-  return true
-}
-
 module.exports = {
   findUserById,
   findUserByEmail,
@@ -61,5 +69,6 @@ module.exports = {
   updateToken,
   updateSubscription,
   updateAvatar,
-  verify
+  verify,
+  reVerify
 }

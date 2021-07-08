@@ -21,6 +21,14 @@ const schemaSubscriptionUser = Joi.object({
     .required(),
 })
 
+// Схема валидации верификации юзера
+const schemaReVerifyUser = Joi.object({
+  email: Joi.string()
+    .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'org', 'ua', 'ru', 'gov', 'ca'] } })
+    .pattern(/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i)
+    .required(),
+})
+
 // Мидлвар для обработки ошибок валидации body
 const validate = (schema, res, req, next) => {
   const validationBody = schema.validate(req.body)
@@ -37,5 +45,8 @@ module.exports = {
   },
   subscriptionValidation: (req, res, next) => {
     return validate(schemaSubscriptionUser, res, req, next)
+  },
+  reVerifyValidation: (req, res, next) => {
+    return validate(schemaReVerifyUser, res, req, next)
   }
 }

@@ -8,17 +8,16 @@ const login = async ({ email, password }) => {
   const user = await User.findUserByEmail(email)
   const isValidPassword = await user?.validPassword(password)
 
-  // Если юзера нет или пароль не валидный или verify не тру - возвращает null
+  // Если юзера нет или пароль не валидный или не верифицирован - возвращает null
   if (!user || !isValidPassword || !user.verify) {
     return null
   }
 
-  // Иначе - создаем, подписываем и возвращаем токен с временем жизни
-  const id = user.id
-  const payload = { id }
+  // Cоздаем, подписываем и возвращаем токен с временем жизни
+  const payload = { id: user.id }
   const token = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: '1h' })
 
-  await User.updateToken(id, token)
+  await User.updateToken(user.id, token)
   return token
 }
 
