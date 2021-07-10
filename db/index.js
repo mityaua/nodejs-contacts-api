@@ -19,9 +19,10 @@ mongoose.connection.on('connected', (_) => {
   console.log('Database connection successful')
 })
 
-// Обработка ошибки при коннекте
+// Консолит ошибку при коннекте + завершает процесс
 mongoose.connection.on('error', err => {
   console.error(`Database connection error: ${err.code}`)
+  process.exit(1)
 })
 
 // Консолит отключение от базы

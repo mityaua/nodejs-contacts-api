@@ -1,26 +1,27 @@
-
 # REST API Contacts Application (NodeJS, Express, MongoDB)
 
 This is a bare-bones example of a contacts application providing a REST
 API to a MongoDB-backed model.
 
- - [How To Install App](#install)
- - [REST API](#rest-api)
- - [Contacts Routes](#contacts)
-	 - [List of contacts](#get-list-of-contacts)
-	 - [Contact by Id](#get-contact-by-id)
-	 - [Create](#create-contact)
-	 - [Update](#update-contact)
-	 - [Update favorite field](#update-contact-favorite-field)
-	 - [Delete](#delete-contact)
- - [Query Params For Contacts Routes](#query-params-for-contacts-list)
- - [Users Routes](#users)
-	 - [Registration](#user-registration)
-	 - [Login](#user-login)
-	 - [Logout](#user-logout)
-	 - [Current user](#get-current-user)
-	 - [Update Subscription](#update-user-subscription)
-     - [Update Avatar](#update-user-avatar)
+- [How To Install App](#install)
+- [REST API](#rest-api)
+- [Contacts Routes](#contacts)
+  - [List of contacts](#get-list-of-contacts)
+  - [Contact by Id](#get-contact-by-id)
+  - [Create](#create-contact)
+  - [Update](#update-contact)
+  - [Update favorite field](#update-contact-favorite-field)
+  - [Delete](#delete-contact)
+- [Query Params For Contacts Routes](#query-params-for-contacts-list)
+- [Users Routes](#users)
+  - [Registration](#user-registration)
+  - [Login](#user-login)
+  - [Verification](#user-verification)
+  - [Re-verification](#user-re-verification)
+  - [Logout](#user-logout)
+  - [Current user](#get-current-user)
+  - [Update Subscription](#update-user-subscription)
+  - [Update Avatar](#update-user-avatar)
 
 ## Install
 
@@ -33,11 +34,11 @@ API to a MongoDB-backed model.
 ## Run the app in development mode
 
     npm run start:dev
-    
+
 ## Run the linter
 
     npm run lint
-    
+
 ## Run the linter in fix mode
 
     npm run lint:fix
@@ -82,7 +83,7 @@ The REST API to the example app is described below.
     Status: success
     Content-Type: application/json
 
-    Body: "contact": { "favorite": boolean, "_id": "", "name": "", "email": "", "phone": "", "owner": { } }
+    Body: "contact": { "favorite": boolean, "_id": string, "name": string, "email": string, "phone": string, "owner": object }
 
 ## Create contact
 
@@ -94,7 +95,7 @@ The REST API to the example app is described below.
     Host: localhost:7070
     Authorization: Bearer
 
-    Body: { "name": "", "email": "", "phone": "" }
+    Body: { "name": string, "email": string, "phone": string }
 
 ### Response
 
@@ -102,7 +103,7 @@ The REST API to the example app is described below.
     Status: success
     Content-Type: application/json
 
-    Body: "contact": { "favorite": boolean, "_id": "", "name": "", "email": "", "phone": "", "owner": "", "__v": number }
+    Body: "contact": { "favorite": boolean, "_id": string, "name": string, "email": string, "phone": string, "owner": object, "__v": number }
 
 ## Update contact
 
@@ -114,7 +115,7 @@ The REST API to the example app is described below.
     Host: localhost:7070
     Authorization: Bearer
 
-    Body: { "favorite": boolean, "name": "", "email": "", "phone": "" }
+    Body: { "favorite": boolean, "name": string, "email": string, "phone": string }
 
 ### Response
 
@@ -122,7 +123,7 @@ The REST API to the example app is described below.
     Status: success
     Content-Type: application/json
 
-    Body: "contact": { "favorite": boolean, "_id": "", "name": "", "email": "", "phone": "", "owner": { } }
+    Body: "contact": { "favorite": boolean, "_id": string, "name": string, "email": string, "phone": string, "owner": object }
 
 ## Update contact favorite field
 
@@ -142,7 +143,7 @@ The REST API to the example app is described below.
     Status: success
     Content-Type: application/json
 
-    Body: "contact": { "favorite": boolean, "_id": "", "name": "", "email": "", "phone": "", "owner": { } }
+    Body: "contact": { "favorite": boolean, "_id": string, "name": string, "email": string, "phone": string, "owner": object }
 
 ## Delete contact
 
@@ -196,14 +197,14 @@ The REST API to the example app is described below.
     HTTP/1.1
     Host: localhost:7070
 
-    Body: { "email": "", "subscription": "" }
+    Body: { "email": string, "subscription": string }
 
 ### Response
 
     HTTP/1.1 201 Created
     Content-Type: application/json
 
-    Body: { "user": { "email": "", "subscription": "" } }
+    Body: { "user": { "email": string, "subscription": string } }
 
 ## User Login
 
@@ -214,14 +215,51 @@ The REST API to the example app is described below.
     HTTP/1.1
     Host: localhost:7070
 
-    Body: { "email": "", "subscription": "" }
+    Body: { "email": string, "subscription": string }
 
 ### Response
 
     HTTP/1.1 200 OK
     Content-Type: application/json
 
-    Body: { "token": "", "user": { "email": "", "subscription": "" } }
+    Body: { "token": string, "user": { "email": string, "subscription": string } }
+
+## User Verification
+
+### Request
+
+`GET /api/users/verify/:verificationToken`
+
+    HTTP/1.1
+    Host: localhost:7070
+
+### Response
+
+    HTTP/1.1 200 OK
+    Status: 200 OK
+    Content-Type: application/json
+
+    Body: { "message": "Verification successful" }
+
+## User Re-verification
+
+### Request
+
+`POST /api/users/verify`
+
+    HTTP/1.1
+    Content-Type: application/json
+    Host: localhost:7070
+
+    Body: { "email": string }
+
+### Response
+
+    HTTP/1.1 200 OK
+    Status: 200 OK
+    Content-Type: application/json
+
+    Body: { "message": "Verification successful" }
 
 ## User Logout
 
@@ -252,7 +290,7 @@ The REST API to the example app is described below.
     HTTP/1.1 200 OK
     Content-Type: application/json
 
-    Body: { "email": "", "subscription": "" }
+    Body: { "email": string, "subscription": string }
 
 ## Update User Subscription
 
@@ -272,7 +310,7 @@ The REST API to the example app is described below.
     Status: updated
     Content-Type: application/json
 
-    Body: { "user": { "email": "", "subscription": "" } }
+    Body: { "user": { "email": string, "subscription": string } }
 
 ## Update User Avatar
 
@@ -293,4 +331,4 @@ The REST API to the example app is described below.
     Status: updated
     Content-Type: application/json
 
-    Body: { "avatarURL": link to image }
+    Body: { "avatarURL": string }

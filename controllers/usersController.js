@@ -2,7 +2,7 @@ const fs = require('fs').promises
 const path = require('path')
 
 const { login, logout } = require('../services/authService')
-const { createUser, findUserById, findUserByEmail, updateSubscription, updateAvatar } = require('../services/userService')
+const { createUser, findUserById, findUserByEmail, updateSubscription, updateAvatar, verify, reVerify } = require('../services/userService')
 const { editAvatar } = require('../helpers/avatarEditor')
 
 const AVATARS_DIR = path.join(process.cwd(), process.env.PUBLIC_DIR, process.env.USERS_AVATARS) // Директория с аватарами
@@ -17,6 +17,28 @@ const regController = async (req, res) => {
 
   const { email, subscription, avatarURL } = await createUser(req.body)
   res.status(201).json({ user: { email, subscription, avatarURL } })
+}
+
+// Контроллер верификации юзера
+const verifyController = async (req, res) => {
+  const result = await verify(req.params.verificationToken)
+
+  if (result) {
+    return res.status(200).json({ message: 'Verification successful' })
+  }
+
+  res.status(404).json({ message: 'User not found' })
+}
+
+// Контроллер повторной верификации юзера
+const reVerifyController = async (req, res) => {
+  const result = await reVerify(req.body.email)
+
+  if (result) {
+    return res.status(200).json({ message: 'Verification email sent' })
+  }
+
+  res.status(400).json({ message: 'Verification has already been passed' })
 }
 
 // Контроллер входа юзера
@@ -34,7 +56,7 @@ const loginController = async (req, res) => {
 // Контроллер выхода юзера
 const logoutController = async (req, res) => {
   await logout(req.user.id)
-  res.status(204).json({ message: 'No Content' })
+  res.status(204).json()
 }
 
 // Контроллер текущего юзера
@@ -82,5 +104,7 @@ module.exports = {
   logoutController,
   currentUserController,
   subscriptionController,
-  avatarController
+  avatarController,
+  verifyController,
+  reVerifyController
 }
